@@ -12,14 +12,27 @@
 
     <style>
         :root {
-            --primary-color: #fcfaf5;
+            --primary-color: #fdfaf2;
             --accent-color: #d4af37;
             --text-color: #4a4a4a;
             --zabuton-color: #e65b5b;
             --comment-bg: #f9f6f0;
+            --logo-red: #b22222;
         }
 
-        body { font-family: 'Noto Sans JP', sans-serif; background-color: var(--primary-color); color: var(--text-color); margin: 0; padding: 0; line-height: 1.6; }
+        body { 
+            font-family: 'Noto Sans JP', sans-serif; 
+            background-color: var(--primary-color);
+            background-image: radial-gradient(#ffffff 20%, transparent 20%), radial-gradient(#ffffff 20%, transparent 20%);
+            background-size: 10px 10px;
+            background-position: 0 0, 5px 5px;
+            background-attachment: fixed;
+            color: var(--text-color); 
+            margin: 0; 
+            padding: 0; 
+            line-height: 1.6; 
+        }
+
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
         header { text-align: center; margin-bottom: 20px; }
         
@@ -28,13 +41,20 @@
 
         .sort-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .sort-btn {
-            background: #fff; border: 2px solid var(--accent-color); color: var(--accent-color);
-            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;
+            background: rgba(255, 255, 255, 0.8); border: 2px solid var(--accent-color); color: var(--accent-color);
+            padding: 6px 18px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;
         }
         .sort-btn.active { background: var(--accent-color); color: #fff; }
 
         .senryu-list { display: flex; flex-direction: column; gap: 30px; }
-        .senryu-card { background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-left: 6px solid var(--accent-color); position: relative; }
+        .senryu-card { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 30px; 
+            border-radius: 15px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
+            border-left: 6px solid var(--logo-red); 
+            position: relative; 
+        }
         
         .senryu-content { 
             font-family: 'Shippori Mincho', serif; 
@@ -91,8 +111,8 @@
     </header>
 
     <div class="sort-controls">
-        <button class="sort-btn active" onclick="sortSenryu('new', this)">新着順</button>
-        <button class="sort-btn" onclick="sortSenryu('random', this)">ランダム</button>
+        <button id="btn-new" class="sort-btn" onclick="sortSenryu('new', this)">新着順</button>
+        <button id="btn-random" class="sort-btn active" onclick="sortSenryu('random', this)">ランダム</button>
     </div>
 
     <div class="senryu-list" id="senryuContainer">
@@ -184,14 +204,17 @@
     function sendZabuton(id, btn) {
         const hasVoted = localStorage.getItem('voted_' + id + '_' + today);
         if (hasVoted) return;
-
         database.ref('counts/' + id).transaction((current) => (current || 0) + 1);
         localStorage.setItem('voted_' + id + '_' + today, "true");
         btn.innerText = "本日は済み";
         btn.disabled = true;
     }
 
-    syncCounts();
+    /* 初期状態でランダムに並び替える */
+    window.onload = function() {
+        const randomBtn = document.getElementById('btn-random');
+        sortSenryu('random', randomBtn);
+    };
 </script>
 
 </body>
