@@ -22,15 +22,25 @@
 
         body { 
             font-family: 'Noto Sans JP', sans-serif; 
-            background-color: var(--primary-color);
-            background-image: radial-gradient(#ffffff 20%, transparent 20%), radial-gradient(#ffffff 20%, transparent 20%);
-            background-size: 10px 10px;
-            background-position: 0 0, 5px 5px;
+            background-image: url('background.png');
+            background-size: cover;
+            background-position: center;
             background-attachment: fixed;
+            background-repeat: no-repeat;
+            background-color: var(--primary-color);
             color: var(--text-color); margin: 0; padding: 0; line-height: 1.6; 
         }
 
-        .container { max-width: 600px; margin: 0 auto; padding: 10px 20px 40px 20px; }
+        
+        .container { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            padding: 20px;
+            min-height: 100vh;
+            background: rgba(253, 250, 242, 0.4); 
+            backdrop-filter: blur(2px); 
+        }
+
         header { text-align: center; margin-bottom: 20px; }
         
         .logo-area { text-align: center; margin: 0; }
@@ -43,19 +53,26 @@
             letter-spacing: 0.1rem;
             margin-top: -5px;
             margin-bottom: 20px;
+            text-shadow: 1px 1px 2px white; /* 背景画像の上でも目立たせる */
+        }
+
+        header p {
+            font-weight: bold;
+            text-shadow: 1px 1px 2px white;
         }
 
         .sort-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .sort-btn {
-            background: rgba(255, 255, 255, 0.8); border: 2px solid var(--accent-color); color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.9); border: 2px solid var(--accent-color); color: var(--accent-color);
             padding: 6px 18px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
         .sort-btn.active { background: var(--accent-color); color: #fff; }
 
         .senryu-list { display: flex; flex-direction: column; gap: 30px; }
         .senryu-card { 
             background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--logo-red); position: relative; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-left: 6px solid var(--logo-red); position: relative; 
         }
         
         .senryu-content { 
@@ -91,7 +108,10 @@
         }
 
         footer { text-align: center; margin-top: 60px; padding-bottom: 40px; }
-        footer a { color: var(--accent-color); text-decoration: none; font-size: 0.9rem; }
+        footer a { 
+            color: var(--accent-color); text-decoration: none; font-size: 0.9rem; 
+            background: white; padding: 5px 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
     </style>
 </head>
 <body oncontextmenu="return false;" onselectstart="return false;" onmousedown="return false;">
@@ -111,7 +131,6 @@
     </div>
 
     <div class="senryu-list" id="senryuContainer">
-        
         <div class="senryu-card" data-date="2024-05-12">
             <div class="senryu-content">指名して<br>夏を彩る<br>君の香</div>
             <div class="senryu-author-name">相模の龍</div>
@@ -143,7 +162,6 @@
                 <span class="count" id="count_senryu_02">...</span>
             </div>
         </div>
-
     </div>
 
     <footer>
@@ -152,6 +170,7 @@
 </div>
 
 <script>
+    // ... (既存のFirebase設定とJavaScriptコード) ...
     const firebaseConfig = {
         apiKey: "AIzaSyAdrKPQuXQSi822RCS6x48WBzmUj_B0VRo",
         authDomain: "senryu-app-8d069.firebaseapp.com",
