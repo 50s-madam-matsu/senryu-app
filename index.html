@@ -17,27 +17,28 @@
             --text-color: #4a4a4a;
             --zabuton-color: #e65b5b;
             --comment-bg: #f9f6f0;
-            --logo-red: #d4af37; 
+            --card-border: #d4af37; 
         }
 
         body { 
             font-family: 'Noto Sans JP', sans-serif; 
             background-image: url('background.png');
-            background-size: cover;
-            background-position: center;
+            background-size: 100% auto;
+            background-position: center top; 
             background-attachment: fixed;
             background-repeat: no-repeat;
-            background-color: var(--primary-color);
+            background-color: #fdfaf2;
+
             color: var(--text-color); margin: 0; padding: 0; line-height: 1.6; 
         }
 
-        
+
         .container { 
             max-width: 600px; 
             margin: 0 auto; 
             padding: 20px;
             min-height: 100vh;
-            background: rgba(253, 250, 242, 0.4); 
+            background: rgba(253, 250, 242, 0.4);
             backdrop-filter: blur(2px); 
         }
 
@@ -53,7 +54,7 @@
             letter-spacing: 0.1rem;
             margin-top: -5px;
             margin-bottom: 20px;
-            text-shadow: 1px 1px 2px white; 
+            text-shadow: 1px 1px 2px white;
         }
 
         header p {
@@ -72,7 +73,9 @@
         .senryu-list { display: flex; flex-direction: column; gap: 30px; }
         .senryu-card { 
             background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-left: 6px solid var(--logo-red); position: relative; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
+            border-left: 6px solid var(--card-border); 
+            position: relative; 
         }
         
         .senryu-content { 
@@ -131,6 +134,7 @@
     </div>
 
     <div class="senryu-list" id="senryuContainer">
+        
         <div class="senryu-card" data-date="2024-05-12">
             <div class="senryu-content">指名して<br>夏を彩る<br>君の香</div>
             <div class="senryu-author-name">相模の龍</div>
@@ -162,6 +166,7 @@
                 <span class="count" id="count_senryu_02">...</span>
             </div>
         </div>
+
     </div>
 
     <footer>
@@ -170,7 +175,6 @@
 </div>
 
 <script>
-    // ... (既存のFirebase設定とJavaScriptコード) ...
     const firebaseConfig = {
         apiKey: "AIzaSyAdrKPQuXQSi822RCS6x48WBzmUj_B0VRo",
         authDomain: "senryu-app-8d069.firebaseapp.com",
