@@ -21,9 +21,18 @@
 
         body { font-family: 'Noto Sans JP', sans-serif; background-color: var(--primary-color); color: var(--text-color); margin: 0; padding: 0; line-height: 1.6; }
         .container { max-width: 600px; margin: 0 auto; padding: 40px 20px; }
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { font-family: 'Shippori Mincho', serif; font-size: 2.2rem; color: var(--accent-color); margin: 10px 0; }
+        header { text-align: center; margin-bottom: 20px; }
         
+        .logo-area { text-align: center; margin: 20px 0; }
+        .main-logo { max-width: 100%; height: auto; display: inline-block; }
+
+        .sort-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
+        .sort-btn {
+            background: #fff; border: 2px solid var(--accent-color); color: var(--accent-color);
+            padding: 5px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;
+        }
+        .sort-btn.active { background: var(--accent-color); color: #fff; }
+
         .senryu-list { display: flex; flex-direction: column; gap: 30px; }
         .senryu-card { background: #fff; padding: 30px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-left: 6px solid var(--accent-color); position: relative; }
         
@@ -51,14 +60,8 @@
         .senryu-author-name::after { content: " 様"; }
 
         .staff-comment { 
-            background-color: var(--comment-bg); 
-            border-radius: 10px; 
-            padding: 12px 15px; 
-            margin-top: 20px; 
-            font-size: 0.85rem; 
-            line-height: 1.6; 
-            color: #555; 
-            border: 1px solid #eee; 
+            background-color: var(--comment-bg); border-radius: 10px; padding: 12px 15px; 
+            margin-top: 20px; font-size: 0.85rem; line-height: 1.6; color: #555; border: 1px solid #eee; 
         }
         .staff-name { font-weight: bold; color: var(--accent-color); display: block; margin-bottom: 3px; }
 
@@ -68,46 +71,38 @@
             border-radius: 30px; cursor: pointer; font-weight: bold; transition: all 0.2s;
             box-shadow: 0 4px 0 #b23a3a;
         }
-        .zabuton-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+        .zabuton-btn:hover { transform: scale(1.02); }
         .zabuton-btn:active { transform: translateY(3px); box-shadow: none; }
         .zabuton-btn:disabled { background: #ccc; box-shadow: none; cursor: default; }
         .count { font-size: 1.5rem; font-weight: bold; margin-left: 15px; color: var(--zabuton-color); min-width: 50px; }
         
         footer { text-align: center; margin-top: 60px; padding-bottom: 40px; }
         footer a { color: var(--accent-color); text-decoration: none; font-size: 0.9rem; }
-
-        .logo-area {
-    text-align: center;
-    margin: 20px 0;
-}
-
-.main-logo {
-    max-width: 100%; 
-    height: auto;
-    display: inline-block;
-}
     </style>
 </head>
 <body>
 
 <div class="container">
-   <header>
-      
-    <div class="logo-area">
-        <img src="logo.png" alt="五十路マダム松山店 熟せん川柳 夏の陣" class="main-logo">
-    </div>
-    
-    <p>お気に入りの句に座布団を！</p>
-</header>
+    <header>
+        <div class="logo-area">
+            <img src="logo.png" alt="五十路マダム松山店 熟せん川柳 夏の陣" class="main-logo">
+        </div>
+        <p>お気に入りの句に座布団を！</p>
+    </header>
 
-    <div class="senryu-list">
+    <div class="sort-controls">
+        <button class="sort-btn active" onclick="sortSenryu('new', this)">新着順</button>
+        <button class="sort-btn" onclick="sortSenryu('random', this)">ランダム</button>
+    </div>
+
+    <div class="senryu-list" id="senryuContainer">
         
-        <div class="senryu-card">
+        <div class="senryu-card" data-date="2024-05-12">
             <div class="senryu-content">指名して<br>夏を彩る<br>君の香</div>
             <div class="senryu-author-name">相模の龍</div>
             <div class="staff-comment">
                 <span class="staff-name">かおる店長より：</span>
-                相模の龍様、いつも粋な一句ありがとうございます！情熱的な夏になりそうですね。
+                相模の龍様、いつも粋な一句ありがとうございます！
             </div>
             <div class="zabuton-area">
                 <button class="zabuton-btn" onclick="sendZabuton('senryu_01', this)">座布団をあげる</button>
@@ -115,12 +110,12 @@
             </div>
         </div>
 
-        <div class="senryu-card">
+        <div class="senryu-card" data-date="2024-05-11">
             <div class="senryu-content">熟女のね<br>笑顔は僕の<br>ビタミン剤</div>
             <div class="senryu-author-name">癒やしを求める戦士</div>
             <div class="staff-comment">
                 <span class="staff-name">ななちゃんより：</span>
-                元気が出ると言ってもらえて嬉しいです！座布団たくさんもらえるといいですね♪
+                元気が出ると言ってもらえて嬉しいです！
             </div>
             <div class="zabuton-area">
                 <button class="zabuton-btn" onclick="sendZabuton('senryu_02', this)">座布団をあげる</button>
@@ -150,11 +145,29 @@
     const database = firebase.database();
     const today = new Date().toISOString().split('T')[0];
 
+    function sortSenryu(type, btn) {
+        const container = document.getElementById('senryuContainer');
+        const cards = Array.from(container.getElementsByClassName('senryu-card'));
+        
+        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        if (type === 'random') {
+            cards.sort(() => Math.random() - 0.5);
+        } else {
+            cards.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
+        }
+
+        container.innerHTML = '';
+        cards.forEach(card => container.appendChild(card));
+        syncCounts();
+    }
+
     function syncCounts() {
         const countElements = document.querySelectorAll('.count');
         countElements.forEach(el => {
             const id = el.id.replace('count_', '');
-            
+            database.ref('counts/' + id).off();
             database.ref('counts/' + id).on('value', (snapshot) => {
                 el.innerText = snapshot.val() || 0;
             });
@@ -172,11 +185,7 @@
         const hasVoted = localStorage.getItem('voted_' + id + '_' + today);
         if (hasVoted) return;
 
-        const countRef = database.ref('counts/' + id);
-        countRef.transaction((current) => {
-            return (current || 0) + 1;
-        });
-
+        database.ref('counts/' + id).transaction((current) => (current || 0) + 1);
         localStorage.setItem('voted_' + id + '_' + today, "true");
         btn.innerText = "本日は済み";
         btn.disabled = true;
