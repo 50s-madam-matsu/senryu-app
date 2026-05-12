@@ -27,22 +27,24 @@
             background-size: 10px 10px;
             background-position: 0 0, 5px 5px;
             background-attachment: fixed;
-            color: var(--text-color); 
-            margin: 0; 
-            padding: 0; 
-            line-height: 1.6; 
+            color: var(--text-color); margin: 0; padding: 0; line-height: 1.6; 
         }
 
-       .container { 
-    max-width: 600px; 
-    margin: 0 auto; 
-    padding: 10px 20px 40px 20px; 
-}
+        .container { max-width: 600px; margin: 0 auto; padding: 10px 20px 40px 20px; }
+        header { text-align: center; margin-bottom: 20px; }
         
-        .logo-area { 
-    text-align: center; 
-    margin: 0 0 20px 0; 
-}
+        .logo-area { text-align: center; margin: 0; }
+        .main-logo { max-width: 100%; height: auto; display: inline-block; }
+
+        /* 期間限定バナー */
+        .event-period {
+            color: var(--accent-color);
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.1rem;
+            margin-top: -5px;
+            margin-bottom: 20px;
+        }
 
         .sort-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .sort-btn {
@@ -53,54 +55,44 @@
 
         .senryu-list { display: flex; flex-direction: column; gap: 30px; }
         .senryu-card { 
-            background: rgba(255, 255, 255, 0.95); 
-            padding: 30px; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05); 
-            border-left: 6px solid var(--logo-red); 
-            position: relative; 
+            background: rgba(255, 255, 255, 0.95); padding: 30px; border-radius: 15px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05); border-left: 6px solid var(--logo-red); position: relative; 
         }
         
         .senryu-content { 
-            font-family: 'Shippori Mincho', serif; 
-            font-size: 1.6rem; 
-            writing-mode: vertical-rl; 
-            text-orientation: upright; 
-            height: 240px; 
-            margin: 20px auto 0 auto; 
-            letter-spacing: 0.3rem; 
-            line-height: 2.2; 
-            display: block; 
+            font-family: 'Shippori Mincho', serif; font-size: 1.6rem; writing-mode: vertical-rl; 
+            text-orientation: upright; height: 240px; margin: 20px auto 0 auto; letter-spacing: 0.3rem; 
+            line-height: 2.2; display: block; 
         }
 
-        .senryu-author-name { 
-            text-align: right; 
-            font-size: 0.95rem; 
-            color: #666; 
-            margin-top: -30px; 
-            font-weight: 500; 
-            position: relative;
-            z-index: 10;
-        }
+        .senryu-author-name { text-align: right; font-size: 0.95rem; color: #666; margin-top: -30px; font-weight: 500; position: relative; z-index: 10; }
         .senryu-author-name::after { content: " 様"; }
 
+        /* スタッフコメント（アイコン付き） */
         .staff-comment { 
-            background-color: var(--comment-bg); border-radius: 10px; padding: 12px 15px; 
+            background-color: var(--comment-bg); border-radius: 10px; padding: 15px; 
             margin-top: 20px; font-size: 0.85rem; line-height: 1.6; color: #555; border: 1px solid #eee; 
+            display: flex; gap: 12px; align-items: flex-start;
         }
+        .staff-icon { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent-color); flex-shrink: 0; object-fit: cover; background: #eee; }
+        .staff-text { flex-grow: 1; }
         .staff-name { font-weight: bold; color: var(--accent-color); display: block; margin-bottom: 3px; }
 
         .zabuton-area { display: flex; align-items: center; justify-content: center; margin-top: 25px; border-top: 1px dotted #eee; padding-top: 20px; }
         .zabuton-btn {
             background: var(--zabuton-color); color: white; border: none; padding: 10px 24px;
-            border-radius: 30px; cursor: pointer; font-weight: bold; transition: all 0.2s;
-            box-shadow: 0 4px 0 #b23a3a;
+            border-radius: 30px; cursor: pointer; font-weight: bold; transition: all 0.2s; box-shadow: 0 4px 0 #b23a3a;
         }
-        .zabuton-btn:hover { transform: scale(1.02); }
-        .zabuton-btn:active { transform: translateY(3px); box-shadow: none; }
+        .zabuton-btn:hover { transform: scale(1.05); }
         .zabuton-btn:disabled { background: #ccc; box-shadow: none; cursor: default; }
         .count { font-size: 1.5rem; font-weight: bold; margin-left: 15px; color: var(--zabuton-color); min-width: 50px; }
         
+        /* 座布団エフェクト用スタイル */
+        .zabuton-effect {
+            position: fixed; pointer-events: none; font-size: 2rem; z-index: 9999;
+            transition: transform 1s ease-out, opacity 1s ease-out;
+        }
+
         footer { text-align: center; margin-top: 60px; padding-bottom: 40px; }
         footer a { color: var(--accent-color); text-decoration: none; font-size: 0.9rem; }
     </style>
@@ -112,6 +104,7 @@
         <div class="logo-area">
             <img src="logo.png" alt="五十路マダム松山店 熟せん川柳 夏の陣" class="main-logo">
         </div>
+        <div class="event-period">2026.06.01 - 08.31 限定開催</div>
         <p>お気に入りの句に座布団を！</p>
     </header>
 
@@ -126,32 +119,22 @@
             <div class="senryu-content">指名して<br>夏を彩る<br>君の香</div>
             <div class="senryu-author-name">相模の龍</div>
             <div class="staff-comment">
-                <span class="staff-name">かおる店長より：</span>
-                相模の龍様、いつも粋な一句ありがとうございます！
+                <img src="staff1.png" class="staff-icon" alt="アイコン">
+                <div class="staff-text">
+                    <span class="staff-name">かおる店長より：</span>
+                    相模の龍様、いつも粋な一句ありがとうございます！情熱的な夏になりそうですね。
+                </div>
             </div>
             <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_01', this)">座布団をあげる</button>
+                <button class="zabuton-btn" onclick="sendZabuton('senryu_01', this, event)">座布団をあげる</button>
                 <span class="count" id="count_senryu_01">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2024-05-11">
-            <div class="senryu-content">熟女のね<br>笑顔は僕の<br>ビタミン剤</div>
-            <div class="senryu-author-name">癒やしを求める戦士</div>
-            <div class="staff-comment">
-                <span class="staff-name">○○ちゃんより：</span>
-                元気が出ると言ってもらえて嬉しいです！
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_02', this)">座布団をあげる</button>
-                <span class="count" id="count_senryu_02">...</span>
             </div>
         </div>
 
     </div>
 
     <footer>
-        <a href="https://xn--vus92eq8nn9j.com/">← オフィシャルサイトへ戻る</a>
+        <a href="index.html">← オフィシャルサイトへ戻る</a>
     </footer>
 </div>
 
@@ -173,16 +156,10 @@
     function sortSenryu(type, btn) {
         const container = document.getElementById('senryuContainer');
         const cards = Array.from(container.getElementsByClassName('senryu-card'));
-        
         document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-
-        if (type === 'random') {
-            cards.sort(() => Math.random() - 0.5);
-        } else {
-            cards.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date));
-        }
-
+        if (type === 'random') { cards.sort(() => Math.random() - 0.5); } 
+        else { cards.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date)); }
         container.innerHTML = '';
         cards.forEach(card => container.appendChild(card));
         syncCounts();
@@ -193,10 +170,7 @@
         countElements.forEach(el => {
             const id = el.id.replace('count_', '');
             database.ref('counts/' + id).off();
-            database.ref('counts/' + id).on('value', (snapshot) => {
-                el.innerText = snapshot.val() || 0;
-            });
-
+            database.ref('counts/' + id).on('value', (snapshot) => { el.innerText = snapshot.val() || 0; });
             const hasVoted = localStorage.getItem('voted_' + id + '_' + today);
             if (hasVoted) {
                 const btn = el.previousElementSibling;
@@ -206,16 +180,29 @@
         });
     }
 
-    function sendZabuton(id, btn) {
+    function sendZabuton(id, btn, e) {
         const hasVoted = localStorage.getItem('voted_' + id + '_' + today);
         if (hasVoted) return;
+
+        // 座布団エフェクト生成
+        const effect = document.createElement('div');
+        effect.className = 'zabuton-effect';
+        effect.innerText = '🟫✨';
+        effect.style.left = e.clientX + 'px';
+        effect.style.top = e.clientY + 'px';
+        document.body.appendChild(effect);
+        setTimeout(() => {
+            effect.style.transform = 'translateY(-150px) rotate(20deg)';
+            effect.style.opacity = '0';
+        }, 50);
+        setTimeout(() => { effect.remove(); }, 1000);
+
         database.ref('counts/' + id).transaction((current) => (current || 0) + 1);
         localStorage.setItem('voted_' + id + '_' + today, "true");
         btn.innerText = "本日は済み";
         btn.disabled = true;
     }
 
-    /* 初期状態でランダムに並び替える */
     window.onload = function() {
         const randomBtn = document.getElementById('btn-random');
         sortSenryu('random', randomBtn);
