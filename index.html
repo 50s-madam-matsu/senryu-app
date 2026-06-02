@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DRRE1H2ZHN"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-DRRE1H2ZHN');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>夏の熟せん川柳大会 | 特設ページ</title>
@@ -46,7 +56,6 @@
             margin: 0 auto; 
             padding: 20px;
             min-height: 100vh;
-
             background: rgba(253, 250, 242, 0.3); 
         }
 
@@ -113,7 +122,7 @@
         .count { font-size: 1.5rem; font-weight: bold; margin-left: 15px; color: var(--zabuton-color); min-width: 50px; }
         
         .zabuton-effect {
-            position: fixed; pointer-events: none; font-size: 2rem; z-index: 9999;
+            position: fixed; pointer-events: none; font-size: 2.2rem; z-index: 9999;
             transition: transform 1s ease-out, opacity 1s ease-out;
         }
 
@@ -133,7 +142,7 @@
         <div class="logo-area">
             <img src="logo.png" alt="五十路マダム松山店 熟せん川柳 夏の陣" class="main-logo">
         </div>
-        <div class="event-period">2026.06.01 - 08.31 限定開催</div>
+        <div class="event-period">2026.06.01 - 07.15 限定開催</div>
         <p>お気に入りの句に座布団を！</p>
     </header>
 
@@ -236,7 +245,7 @@
         effect.style.top = e.clientY + 'px';
         document.body.appendChild(effect);
         setTimeout(() => {
-            effect.style.transform = 'translateY(-150px) rotate(20deg)';
+            effect.style.transform = 'translateY(-150px) rotate(25deg) scale(1.2)';
             effect.style.opacity = '0';
         }, 50);
         setTimeout(() => { effect.remove(); }, 1000);
