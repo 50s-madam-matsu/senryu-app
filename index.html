@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-DRRE1H2ZHN"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -15,7 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>夏の熟せん川柳大会 | 特設ページ</title>
 
-	<link rel="icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="favicon.png" type="image/png">
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
@@ -80,6 +79,34 @@
             text-shadow: 1px 1px 2px white;
         }
 
+        .countdown-container {
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid var(--accent-color);
+            border-radius: 10px;
+            padding: 10px;
+            margin: 15px auto;
+            max-width: 400px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .countdown-title {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: var(--text-color);
+            margin-bottom: 5px;
+            letter-spacing: 0.05rem;
+        }
+        .countdown-timer {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--zabuton-color);
+            letter-spacing: 0.05rem;
+        }
+        .countdown-timer span {
+            font-size: 1.5rem;
+            margin: 0 2px;
+        }
+
         .sort-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .sort-btn {
             background: rgba(255, 255, 255, 0.9); border: 2px solid var(--accent-color); color: var(--accent-color);
@@ -134,27 +161,21 @@
             background: white; padding: 5px 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
+        .comment-loading {
+            color: #888;
+            font-size: 0.9em;
+        }
+        .comment-loading span {
+            animation: blink 1.4s infinite both;
+        }
+        .comment-loading span:nth-child(2) { animation-delay: .2s; }
+        .comment-loading span:nth-child(3) { animation-delay: .4s; }
 
-.comment-loading {
-    color: #888;
-    font-size: 0.9em;
-}
-.comment-loading span {
-    animation: blink 1.4s infinite both;
-}
-.comment-loading span:nth-child(2) { animation-delay: .2s; }
-.comment-loading span:nth-child(3) { animation-delay: .4s; }
-
-@keyframes blink {
-    0% { opacity: .2; }
-    20% { opacity: 1; }
-    100% { opacity: .2; }
-}
-
-
-
-
-		
+        @keyframes blink {
+            0% { opacity: .2; }
+            20% { opacity: 1; }
+            100% { opacity: .2; }
+        }
     </style>
 </head>
 <body oncontextmenu="return false;" onselectstart="return false;" onmousedown="return false;">
@@ -167,6 +188,12 @@
             <img src="logo.png" alt="五十路マダム松山店 熟せん川柳 夏の陣" class="main-logo">
         </div>
         <div class="event-period">2026.06.15 - 07.31 限定開催<br>2026.08.09 結果発表</div>
+
+        <div class="countdown-container">
+            <div class="countdown-title">⏳ 投票締め切りまで あと</div>
+            <div class="countdown-timer" id="countdownTimer">計算中...</div>
+        </div>
+
         <p>お気に入りの句に座布団を贈って投票しよう！</p>
     </header>
 
@@ -461,8 +488,8 @@
                 <div class="staff-text">
                     <span class="staff-name">スタッフみなみより：</span>
                     いつも面白い無茶振りをありがとうございます🤭<br>
-					電話口でのやり取りを一句にしていただけるなんて、とっても嬉しいです🌼<br>
-					これからも楽しいお電話、お待ちしております📞もちろんご予約も😉(笑)
+                    電話口でのやり取りを一句にしていただけるなんて、とっても嬉しいです🌼<br>
+                    これからも楽しいお電話、お待ちしております📞もちろんご予約も😉(笑)
                 </div>
             </div>
             <div class="zabuton-area">
@@ -471,7 +498,7 @@
             </div>
         </div>
 
-		<div class="senryu-card" data-date="2026-07-01">
+        <div class="senryu-card" data-date="2026-07-01">
             <div class="senryu-content">熟れた魅力<br>帰るころには<br>また予約</div>
             <div class="senryu-author-name">Y</div>
             <div class="staff-comment">
@@ -479,8 +506,8 @@
                 <div class="staff-text">
                     <span class="staff-name">かおる店長より：</span>
                     楽しいお時間が伝わってくる、心弾む一句ですね🌹✨<br>
-					「また予約」のひと言に、マダムとのひとときが素敵な思い出になったことを感じて、とても嬉しくなりました🥰<br>
-					また心ときめく素敵なひとときをお過ごしくださいネ♪
+                    「また予約」のひと言に、マダムとのひとときが素敵な思い出になったことを感じて、とても嬉しくなりました🥰<br>
+                    また心ときめく素敵なひとときをお過ごしくださいネ♪
                 </div>
             </div>
             <div class="zabuton-area">
@@ -489,7 +516,7 @@
             </div>
         </div>
 
-		<div class="senryu-card" data-date="2026-06-30">
+        <div class="senryu-card" data-date="2026-06-30">
             <div class="senryu-content">お別れの<br>キスは明日の<br>エネルギー</div>
             <div class="senryu-author-name">M</div>
             <div class="staff-comment">
@@ -497,8 +524,8 @@
                 <div class="staff-text">
                     <span class="staff-name">新田多香子さんより：</span>
                     ちゃんとエネルギー満タンになりましたか？🤭💗<br>
-					多香子はいつでも準備万端でお待ちしています☺️🫶<br>
-					素敵な川柳ありがとうございます💓
+                    多香子はいつでも準備万端でお待ちしています☺️🫶<br>
+                    素敵な川柳ありがとうございます💓
                 </div>
             </div>
             <div class="zabuton-area">
@@ -507,7 +534,7 @@
             </div>
         </div>
 
-		<div class="senryu-card" data-date="2026-07-02">
+        <div class="senryu-card" data-date="2026-07-02">
             <div class="senryu-content">気がつけば<br>また会いたくなる<br>不思議です</div>
             <div class="senryu-author-name">K</div>
             <div class="staff-comment">
@@ -515,8 +542,8 @@
                 <div class="staff-text">
                     <span class="staff-name">スタッフ柴より：</span>
                     「不思議です」という結びに、余韻が心地よく残る一句ですね🍵<br>
-					気づけば惹かれている、そんな自然な想いが、とても美しく表現されていました。<br>
-					また素敵な時間を重ねていただけますように。
+                    気づけば惹かれている、そんな自然な想いが、とても美しく表現されていました。<br>
+                    また素敵な時間を重ねていただけますように。
                 </div>
             </div>
             <div class="zabuton-area">
@@ -525,17 +552,17 @@
             </div>
         </div>
 
-		<div class="senryu-card" data-date="2026-07-02">
+        <div class="senryu-card" data-date="2026-07-02">
             <div class="senryu-content">その笑顔<br>反則級の<br>色気です</div>
             <div class="senryu-author-name">K</div>
             <div class="staff-comment">
                 <img src="staff3.png" class="staff-icon" alt="アイコン">
                 <div class="staff-text">
                     <span class="staff-name">スタッフみなみより：</span>
-                    笑顔の中にふと覗く色気は、まさにマダムならではの魅力ですね💄<br>
-					「反則級」という表現に分かる～と思わず頷いてしまいました🤭<br>
-					また心ときめく素敵なお時間をお過ごしください🫶
-				</div>
+                    笑顔の中にふと覗く色気は、まさにマダムならではの魅力ね💄<br>
+                    「反則級」という表現に分かる～と思わず頷いてしまいました🤭<br>
+                    また心ときめく素敵なお時間をお過ごしください🫶
+                </div>
             </div>
             <div class="zabuton-area">
                 <button class="zabuton-btn" onclick="sendZabuton('senryu_20', this, event)">座布団を贈る</button>
@@ -543,7 +570,7 @@
             </div>
         </div>
 
-		<div class="senryu-card" data-date="2026-07-03">
+        <div class="senryu-card" data-date="2026-07-03">
             <div class="senryu-content">お気に入り<br>逢える嬉しさ<br>笑みこぼれ</div>
             <div class="senryu-author-name">M</div>
             <div class="staff-comment">
@@ -551,9 +578,9 @@
                 <div class="staff-text">
                     <span class="staff-name">かおる店長より：</span>
                     「笑みこぼれ」の一言だけで、嬉しさが伝わってくるのが素敵です😊✨<br>
-					そんなワクワクしたお気持ちが伝わってくる、思わず笑顔になる一句でした🌹<br>
-					次のご予約も楽しみですネ♪
-				</div>
+                    そんなワクワクしたお気持ちが伝わってくる、思わず笑顔になる一句でした🌹<br>
+                    次のご予約も楽しみですネ♪
+                </div>
             </div>
             <div class="zabuton-area">
                 <button class="zabuton-btn" onclick="sendZabuton('senryu_21', this, event)">座布団を贈る</button>
@@ -561,15 +588,15 @@
             </div>
         </div>
 
-
-<div class="senryu-card" data-date="2026-07-04">
+        <div class="senryu-card" data-date="2026-07-04">
             <div class="senryu-content">熟女沼<br>何十回でも<br>過去最高</div>
             <div class="senryu-author-name">T</div>
             <div class="staff-comment">
                 <img src="cast_arai.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
+               <div class="staff-text">
                     <span class="staff-name">荒井美保さんより：</span>
-                    <span class="comment-loading">コメントをもらい中<span>.</span><span>.</span><span>.</span>💬</span>
+                    「今回が一番楽しかった！」と思うたびに、また次もその最高を更新してくれる気がしてしまうのが熟女沼🎀✊<br>
+					推しは尊い👼推ししか勝たん💖です🥰
                 </div>
             </div>
             <div class="zabuton-area">
@@ -577,11 +604,6 @@
                 <span class="count" id="count_senryu_22">...</span>
             </div>
         </div>
-		
-
-
-
-		
 
     </div>
 
@@ -654,9 +676,32 @@
         btn.disabled = true;
     }
 
+    function updateCountdown() {
+        const targetDate = new Date("2026-07-31T23:59:59+09:00").getTime();
+        const now = new Date().getTime();
+        const diff = targetDate - now;
+
+        const timerElement = document.getElementById("countdownTimer");
+
+        if (diff <= 0) {
+            timerElement.innerHTML = "投票は締め切られました。たくさんのご投票ありがとうございました！";
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        timerElement.innerHTML = `<span>${days}</span>日 <span>${hours}</span>時間 <span>${minutes}</span>分 <span>${seconds}</span>秒`;
+    }
+
+    setInterval(updateCountdown, 1000);
+
     window.onload = function() {
         const randomBtn = document.getElementById('btn-random');
         sortSenryu('random', randomBtn);
+        updateCountdown();
     };
 </script>
 
