@@ -362,7 +362,7 @@
                     <span class="staff-name">新田多香子さんより：</span>
                     左右から何が出ちゃうんでしょうね🤭<br>
                     次回もしっかり確認しなくちゃいけませんね！👮‍♀️<br><br>
-                    川柳応募ありがとうごさいます🥰🫶
+                    川柳応募ありがとうございます🥰🫶
                 </div>
             </div>
             <div class="zabuton-area">
@@ -625,7 +625,7 @@
 
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0];
 
     function sortSenryu(type, btn) {
         const container = document.getElementById('senryuContainer');
