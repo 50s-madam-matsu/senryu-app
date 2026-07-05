@@ -133,6 +133,28 @@
             color: var(--accent-color); text-decoration: none; font-size: 0.9rem; 
             background: white; padding: 5px 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
+
+
+.comment-loading {
+    color: #888;
+    font-size: 0.9em;
+}
+.comment-loading span {
+    animation: blink 1.4s infinite both;
+}
+.comment-loading span:nth-child(2) { animation-delay: .2s; }
+.comment-loading span:nth-child(3) { animation-delay: .4s; }
+
+@keyframes blink {
+    0% { opacity: .2; }
+    20% { opacity: 1; }
+    100% { opacity: .2; }
+}
+
+
+
+
+		
     </style>
 </head>
 <body oncontextmenu="return false;" onselectstart="return false;" onmousedown="return false;">
@@ -540,7 +562,21 @@
         </div>
 
 
-
+<div class="senryu-card" data-date="2026-07-04">
+            <div class="senryu-content">熟女沼<br>何十回でも<br>過去最高</div>
+            <div class="senryu-author-name">M</div>
+            <div class="staff-comment">
+                <img src="cast_arai.png" class="staff-icon" alt="アイコン">
+                <div class="staff-text">
+                    <span class="staff-name">荒井美保さんより：</span>
+                    <span class="comment-loading">コメントをもらい中<span>.</span><span>.</span><span>.</span>💬</span>
+                </div>
+            </div>
+            <div class="zabuton-area">
+                <button class="zabuton-btn" onclick="sendZabuton('senryu_22', this, event)">座布団を贈る</button>
+                <span class="count" id="count_senryu_22">...</span>
+            </div>
+        </div>
 		
 
 
