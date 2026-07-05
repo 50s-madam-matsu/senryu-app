@@ -614,95 +614,127 @@
 
 <script>
     const firebaseConfig = {
-        apiKey: "AIzaSyAdrKPQuXQSi822RCS6x48WBzmUj_B0VRo",
-        authDomain: "senryu-app-8d069.firebaseapp.com",
-        databaseURL: "https://senryu-app-8d069-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "senryu-app-8d069",
-        storageBucket: "senryu-app-8d069.firebasestorage.app",
-        messagingSenderId: "190660604196",
-        appId: "1:190660604196:web:e97e7626f49a8be0d643b1"
-    };
+    apiKey: "AIzaSyAdrKPQuXQSi822RCS6x48WBzmUj_B0VRo",
+    authDomain: "senryu-app-8d069.firebaseapp.com",
+    databaseURL: "https://senryu-app-8d069-default-rtdb.asia-southeast1.firebasedatabase.app",
+    projectId: "senryu-app-8d069",
+    storageBucket: "senryu-app-8d069.firebasestorage.app",
+    messagingSenderId: "190660604196",
+    appId: "1:190660604196:web:e97e7626f49a8be0d643b1"
+};
 
-    firebase.initializeApp(firebaseConfig);
-    const database = firebase.database();
-    const today = new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0];
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
 
-    function sortSenryu(type, btn) {
-        const container = document.getElementById('senryuContainer');
-        const cards = Array.from(container.getElementsByClassName('senryu-card'));
-        document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        if (type === 'random') { cards.sort(() => Math.random() - 0.5); } 
-        else { cards.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date)); }
-        container.innerHTML = '';
-        cards.forEach(card => container.appendChild(card));
-        syncCounts();
+const targetDate = new Date("2026-07-31T23:59:59+09:00").getTime();
+
+function getJstDateString() {
+    return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0];
+}
+
+function sortSenryu(type, btn) {
+    const container = document.getElementById('senryuContainer');
+    const cards = Array.from(container.getElementsByClassName('senryu-card'));
+    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    if (type === 'random') { 
+        cards.sort(() => Math.random() - 0.5); 
+    } else { 
+        cards.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date)); 
     }
+    
+    container.innerHTML = '';
+    cards.forEach(card => container.appendChild(card));
+    syncCounts();
+}
 
-    function syncCounts() {
-        const countElements = document.querySelectorAll('.count');
-        countElements.forEach(el => {
-            const id = el.id.replace('count_', '');
-            database.ref('counts/' + id).off();
-            database.ref('counts/' + id).on('value', (snapshot) => { el.innerText = snapshot.val() || 0; });
-            const hasVoted = localStorage.getItem('voted_' + id + '_' + today);
+function syncCounts() {
+    const now = new Date().getTime();
+    const countElements = document.querySelectorAll('.count');
+    const currentToday = getJstDateString(); 
+    
+    countElements.forEach(el => {
+        const id = el.id.replace('count_', '');
+        database.ref('counts/' + id).off();
+        database.ref('counts/' + id).on('value', (snapshot) => { 
+            el.innerText = snapshot.val() || 0; 
+        });
+        
+        const btn = el.previousElementSibling;
+        
+        if (now >= targetDate) {
+            btn.innerText = "投票終了";
+            btn.disabled = true;
+        } else {
+            const hasVoted = localStorage.getItem('voted_' + id + '_' + currentToday);
             if (hasVoted) {
-                const btn = el.previousElementSibling;
                 btn.innerText = "本日は済み";
                 btn.disabled = true;
+            } else {
+                btn.innerText = "座布団を贈る";
+                btn.disabled = false;
             }
-        });
-    }
-
-    function sendZabuton(id, btn, e) {
-        const hasVoted = localStorage.getItem('voted_' + id + '_' + today);
-        if (hasVoted) return;
-
-        const effect = document.createElement('div');
-        effect.className = 'zabuton-effect';
-        effect.innerText = '🟫✨';
-        effect.style.left = e.clientX + 'px';
-        effect.style.top = e.clientY + 'px';
-        document.body.appendChild(effect);
-        setTimeout(() => {
-            effect.style.transform = 'translateY(-150px) rotate(25deg) scale(1.2)';
-            effect.style.opacity = '0';
-        }, 50);
-        setTimeout(() => { effect.remove(); }, 1000);
-
-        database.ref('counts/' + id).transaction((current) => (current || 0) + 1);
-        localStorage.setItem('voted_' + id + '_' + today, "true");
-        btn.innerText = "本日は済み";
-        btn.disabled = true;
-    }
-
-    function updateCountdown() {
-        const targetDate = new Date("2026-07-31T23:59:59+09:00").getTime();
-        const now = new Date().getTime();
-        const diff = targetDate - now;
-
-        const timerElement = document.getElementById("countdownTimer");
-
-        if (diff <= 0) {
-            timerElement.innerHTML = "投票は締め切られました。たくさんのご投票ありがとうございました！";
-            return;
         }
+    });
+}
 
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+function sendZabuton(id, btn, e) {
+    const now = new Date().getTime();
+    if (now >= targetDate) return;
 
-        timerElement.innerHTML = `<span>${days}</span>日 <span>${hours}</span>時間 <span>${minutes}</span>分 <span>${seconds}</span>秒`;
+    const currentToday = getJstDateString();
+    const hasVoted = localStorage.getItem('voted_' + id + '_' + currentToday);
+    if (hasVoted) return;
+
+    const effect = document.createElement('div');
+    effect.className = 'zabuton-effect';
+    effect.innerText = '🟫✨';
+    effect.style.left = e.clientX + 'px';
+    effect.style.top = e.clientY + 'px';
+    document.body.appendChild(effect);
+    setTimeout(() => {
+        effect.style.transform = 'translateY(-150px) rotate(25deg) scale(1.2)';
+        effect.style.opacity = '0';
+    }, 50);
+    setTimeout(() => { effect.remove(); }, 1000);
+
+    database.ref('counts/' + id).transaction((current) => (current || 0) + 1);
+    
+    localStorage.setItem('voted_' + id + '_' + currentToday, "true");
+    btn.innerText = "本日は済み";
+    btn.disabled = true;
+}
+
+function updateCountdown() {
+    const now = new Date().getTime();
+    const diff = targetDate - now;
+    const timerElement = document.getElementById("countdownTimer");
+
+    if (diff <= 0) {
+        timerElement.innerHTML = "投票は締め切られました。たくさんのご投票ありがとうございました！";
+        document.querySelectorAll('.zabuton-btn').forEach(btn => {
+            btn.innerText = "投票終了";
+            btn.disabled = true;
+        });
+        return;
     }
 
-    setInterval(updateCountdown, 1000);
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
-    window.onload = function() {
-        const randomBtn = document.getElementById('btn-random');
-        sortSenryu('random', randomBtn);
-        updateCountdown();
-    };
+    timerElement.innerHTML = `<span>${days}</span>日 <span>${hours}</span>時間 <span>${minutes}</span>分 <span>${seconds}</span>秒`;
+}
+
+setInterval(updateCountdown, 1000);
+
+window.onload = function() {
+    const randomBtn = document.getElementById('btn-random');
+    sortSenryu('random', randomBtn);
+    updateCountdown();
+};
 </script>
 
 </body>
