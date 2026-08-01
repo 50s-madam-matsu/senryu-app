@@ -1,1319 +1,312 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-DRRE1H2ZHN"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-      gtag('config', 'G-DRRE1H2ZHN');
-    </script>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夏の熟せん川柳大会 | 特設ページ</title>
-
-    <link rel="icon" href="favicon.png" type="image/png">
-
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
-
-    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
-
-    <style>
-        :root {
-            --primary-color: #fdfaf2;
-            --accent-color: #d4af37;
-            --text-color: #4a4a4a;
-            --zabuton-color: #e65b5b;
-            --comment-bg: #f9f6f0;
-            --card-border: #d4af37; 
+<style>
+    @keyframes slowPulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.9;
         }
-
-        .fixed-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1; 
-            background-image: url('background.png');
-            background-size: 100% auto;
-            background-position: center top;
-            background-repeat: no-repeat;
-            background-color: #fdfaf2;
+        50% {
+            transform: scale(1.05);
+            opacity: 1;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
-
-        body { 
-            font-family: 'Noto Sans JP', sans-serif; 
-            margin: 0; padding: 0; line-height: 1.6; 
-            color: var(--text-color);
-            background-color: transparent; 
+        100% {
+            transform: scale(1);
+            opacity: 0.9;
         }
+    }
 
-        .container { 
-            max-width: 600px; 
-            margin: 0 auto; 
-            padding: 20px;
-            min-height: 100vh;
-            background: rgba(253, 250, 242, 0.3); 
-        }
+    body {
+        background-image: url('background.png');
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+    }
 
-        header { text-align: center; margin-bottom: 20px; }
-        .logo-area { text-align: center; margin: 0; }
-        .main-logo { max-width: 100%; height: auto; display: inline-block; }
+    .tallying-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 15px;
+        text-align: center;
+        font-family: sans-serif;
+        box-sizing: border-box;
+    }
+    .tally-logo {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+    .result-schedule {
+        font-size: 16px;
+        font-weight: bold;
+        color: #b8860b;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid #e8cc7d;
+        border-radius: 20px;
+        padding: 8px 15px;
+        display: inline-block;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .tally-header h2 {
+        color: #d4af37;
+        margin-bottom: 25px;
+        font-size: 20px;
+        line-height: 1.6;
+        font-weight: bold;
+    }
+    .tally-pulse-text {
+        display: block;
+        font-size: 28px;
+        margin: 12px 0;
+        animation: slowPulse 4s ease-in-out infinite;
+    }
+    .staff-comment {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 25px;
+        text-align: left;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .staff-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        float: left;
+        margin-right: 12px;
+    }
+    .staff-text {
+        overflow: hidden;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #333;
+    }
+    .staff-name {
+        font-weight: bold;
+        color: #8b4513;
+        display: block;
+        margin-bottom: 8px;
+    }
 
-        .event-period {
-            color: var(--accent-color);
-            font-size: 0.8rem;
-            font-weight: bold;
-            letter-spacing: 0.1rem;
-            margin-top: -5px;
-            margin-bottom: 20px;
-            text-shadow: 1px 1px 2px white;
-        }
+    /* 応募作品一覧案内エリア（プライマリボタン） */
+    .all-entries-box {
+        background: rgba(255, 255, 255, 0.98);
+        border: 2px solid #d4af37;
+        border-radius: 16px;
+        padding: 22px 15px;
+        margin: 25px 0 35px;
+        text-align: center;
+        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
+    }
+    .all-entries-title {
+        margin: 0 0 12px;
+        font-weight: bold;
+        color: #8b4513;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+    }
 
-        header p {
-            font-weight: bold;
-            text-shadow: 1px 1px 2px white;
-        }
+    .all-entries-btn {
+        display: inline-block;
+        width: 100%;
+        max-width: 320px;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, #b8860b 0%, #8b4513 100%);
+        color: #ffffff;
+        font-size: 17px;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 30px;
+        box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
 
-        .countdown-container {
-            background: rgba(255, 255, 255, 0.85);
-            border: 1px solid var(--accent-color);
-            border-radius: 10px;
-            padding: 10px;
-            margin: 15px auto;
-            max-width: 400px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        .countdown-title {
-            font-size: 0.8rem;
-            font-weight: bold;
-            color: var(--text-color);
-            margin-bottom: 5px;
-            letter-spacing: 0.05rem;
-        }
-        .countdown-timer {
-            font-family: 'Noto Sans JP', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--zabuton-color);
-            letter-spacing: 0.05rem;
-        }
-        .countdown-timer span {
-            font-size: 1.5rem;
-            margin: 0 2px;
-        }
+    .all-entries-btn::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 50%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.25);
+        transform: rotate(30deg);
+        animation: shine 3.5s infinite;
+    }
 
-        .sort-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        .sort-btn {
-            background: rgba(255, 255, 255, 0.9); border: 2px solid var(--accent-color); color: var(--accent-color);
-            padding: 6px 18px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: bold; transition: all 0.2s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-        .sort-btn.active { background: var(--accent-color); color: #fff; }
+    @keyframes shine {
+        0% { left: -60%; }
+        20% { left: 120%; }
+        100% { left: 120%; }
+    }
 
-        .senryu-list { display: flex; flex-direction: column; gap: 30px; }
-        .senryu-card { 
-            background: rgba(255, 255, 255, 0.95); padding: 20px; border-radius: 15px; 
-            box-shadow: 0 4px 20px rgba(0,0,0,0.1); 
-            border-left: 6px solid var(--card-border); 
-            position: relative; 
-        }
-        
-        .senryu-content { 
-            font-family: 'Shippori Mincho', serif; font-size: 1.35rem; writing-mode: vertical-rl; 
-            text-orientation: upright; height: 210px; margin: 15px auto 0 auto; letter-spacing: 0.2rem; 
-            line-height: 2.0; display: block; 
-        }
+    .all-entries-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(139, 69, 19, 0.4);
+        opacity: 0.95;
+    }
 
-        .senryu-author-name { text-align: right; font-size: 0.95rem; color: #666; margin-top: -30px; font-weight: 500; position: relative; z-index: 10; }
-        .senryu-author-name::after { content: " 様"; }
+    .prizes-preview h3 {
+        font-size: 18px;
+        color: #333;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 10px;
+    }
+    .prize-item {
+        background: rgba(255, 255, 255, 0.95);
+        margin-bottom: 12px;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 6px solid #ccc;
+        text-align: left;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .prize-item.gold { border-left-color: #d4af37; }
+    .prize-item.kaoru { border-left-color: #c2185b; }
+    .prize-item.madam { border-left-color: #ff69b4; }
+    .prize-name {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    .prize-desc {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    .prize-reward {
+        font-weight: bold;
+        color: #d11a2a;
+        font-size: 16px;
+    }
+    .announce-date {
+        margin-top: 30px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
 
-        .staff-comment { 
-            background-color: var(--comment-bg); border-radius: 10px; padding: 15px; 
-            margin-top: 20px; font-size: 0.85rem; line-height: 1.6; color: #555; border: 1px solid #eee; 
-            display: flex; gap: 12px; align-items: flex-start;
-        }
-        .staff-icon { width: 45px; height: 45px; border-radius: 50%; border: 2px solid var(--accent-color); flex-shrink: 0; object-fit: cover; background: #eee; }
-        .staff-text { flex-grow: 1; }
-        .staff-name { font-weight: bold; color: var(--accent-color); display: block; margin-bottom: 3px; }
+    /* オフィシャルサイトへ戻るボタン */
+    .official-site-btn {
+        display: inline-block;
+        width: 100%;
+        max-width: 320px;
+        margin: 15px auto 30px;
+        padding: 13px 20px;
+        background: #ffffff;
+        color: #8b4513;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 30px;
+        border: 2px solid #b8860b;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    .official-site-btn:hover {
+        background: #fffdf0;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+    }
 
-        .zabuton-area { display: flex; align-items: center; justify-content: center; margin-top: 25px; border-top: 1px dotted #eee; padding-top: 20px; }
-        .zabuton-btn {
-            background: var(--zabuton-color); color: white; border: none; padding: 10px 24px;
-            border-radius: 30px; cursor: pointer; font-weight: bold; transition: all 0.2s; box-shadow: 0 4px 0 #b23a3a;
-        }
-        .zabuton-btn:hover { transform: scale(1.05); }
-        .zabuton-btn:disabled { background: #ccc; box-shadow: none; cursor: default; }
-        .count { font-size: 1.5rem; font-weight: bold; margin-left: 15px; color: var(--zabuton-color); min-width: 50px; }
-        
-        .zabuton-effect {
-            position: fixed; pointer-events: none; font-size: 2.2rem; z-index: 9999;
-            transition: transform 1s ease-out, opacity 1s ease-out;
-        }
+    @media screen and (min-width: 480px) {
+        .result-schedule { font-size: 18px; }
+        .tally-header h2 { font-size: 24px; }
+        .tally-pulse-text { font-size: 32px; }
+        .staff-text { font-size: 16px; }
+        .prizes-preview h3 { font-size: 20px; }
+        .prize-name { font-size: 18px; }
+        .prize-desc { font-size: 14px; }
+        .prize-reward { font-size: 18px; }
+        .announce-date { font-size: 18px; }
+        .official-site-btn { font-size: 17px; }
+    }
+</style>
 
-        footer { text-align: center; margin-top: 60px; padding-bottom: 40px; }
-        footer a { 
-            color: var(--accent-color); text-decoration: none; font-size: 0.9rem; 
-            background: white; padding: 5px 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
+<div class="tallying-wrapper">
+    <img src="logo.png" class="tally-logo" alt="ロゴ">
 
-        .comment-loading {
-            color: #888;
-            font-size: 0.9em;
-        }
-        .comment-loading span {
-            animation: blink 1.4s infinite both;
-        }
-        .comment-loading span:nth-child(2) { animation-delay: .2s; }
-        .comment-loading span:nth-child(3) { animation-delay: .4s; }
-
-        @keyframes blink {
-            0% { opacity: .2; }
-            20% { opacity: 1; }
-            100% { opacity: .2; }
-        }
-    </style>
-</head>
-<body oncontextmenu="return false;" onselectstart="return false;" onmousedown="return false;">
-
-<div class="fixed-background"></div>
-
-<div class="container">
-    <header>
-        <div class="logo-area">
-            <img src="logo.png" alt="五十路マダム松山店 熟せん川柳 夏の陣" class="main-logo">
-        </div>
-        <div class="event-period">2026.06.15 - 07.31 限定開催<br>2026.08.09 結果発表</div>
-
-        <div class="countdown-container">
-            <div class="countdown-title">⏳ 応募・投票締め切りまで あと</div>
-            <div class="countdown-timer" id="countdownTimer">計算中...</div>
-        </div>
-
-        <p>お気に入りの句に座布団を贈って投票しよう！</p>
-    </header>
-
-    <div class="sort-controls">
-        <button id="btn-new" class="sort-btn" onclick="sortSenryu('new', this)">新着順</button>
-        <button id="btn-random" class="sort-btn active" onclick="sortSenryu('random', this)">ランダム</button>
+    <div class="result-schedule">
+        📅 結果発表：8月9日(日) 昼頃を予定！
     </div>
 
-    <div class="senryu-list" id="senryuContainer">
-        
-        <div class="senryu-card" data-date="2026-06-17">
-            <div class="senryu-content">声だけで<br>すでに満点<br>予約完了</div>
-            <div class="senryu-author-name">T</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    スタッフへの温かい一句をありがとうございます✨<br>
-                    「声だけで満点」と感じていただけたことは、スタッフにとって何よりの励みです😊<br>
-                    これからも安心してご利用いただけるお店づくりに努めてまいります♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_01', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_01">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-18">
-            <div class="senryu-content">再会を<br>喜び熱く<br>燃え上がる</div>
-            <div class="senryu-author-name">S</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    情熱的な一句をありがとうございます✨<br>
-                    お二人の「再会」への熱い想いが、まっすぐに伝わってきて胸が熱くなります🥰<br>
-                    そんな素敵な時間をさらに盛り上げられるよう、私たちも心を込めてお迎えします♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_02', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_02">...</span>
-            </div>
-        </div>
-
-         <div class="senryu-card" data-date="2026-06-19">
-            <div class="senryu-content">残り香に<br>再逢、約する<br>ドアの前ひとり</div>
-            <div class="senryu-author-name">N</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    「残り香」という言葉選びが美しく、別れ際の情景が自然と目に浮かぶ一句ですね🍵<br>
-                    静かな余韻の中に、次の再逢への想いが込められていて、とても味わい深く感じました。<br>
-                    また素敵な時間を重ねていただけますように🙇‍♂️
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_03', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_03">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-21">
-            <div class="senryu-content">あじさいも<br>色をわすれる<br>浴衣のあなた</div>
-            <div class="senryu-author-name">P</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    浴衣姿に心奪われる瞬間が伝わってくる、季節感あふれる一句ですね👘<br>
-                    あじさいさえ霞んでしまうほどの素敵なひとときだったことが伝わってきました😊<br>
-                    また心に残るデートになりますように✨
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_04', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_04">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-23">
-            <div class="senryu-content">2時間で<br>心の隙間<br>埋めに来る</div>
-            <div class="senryu-author-name">K</div>
-            <div class="staff-comment">
-                <img src="cast_arai.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">荒井美保さんより：</span>
-                    求めるのは、心の充実💓<br>
-                    2時間でも 心は満たされる、<br>
-                    そう思っていただけると 嬉しいです🥰<br>
-                    そんな温かさを感じる一句です🍀
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_05', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_05">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-26">
-            <div class="senryu-content">日記見て<br>実物求め<br>足が向く</div>
-            <div class="senryu-author-name">K</div>
-            <div class="staff-comment">
-                <img src="cast_ozaki.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">尾崎幸子さんより：</span>
-                    毎日コツコツ続けているので<br>
-                    日記から気持ちが動いて、<br>
-                    会いに来てもらえるって嬉しいです🥰<br>
-                    実際に会った時<br>
-                    「思ってたよりいいな」って思ってもらえるように<br>
-                    とびきりの笑顔でお伺いします♡
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_06', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_06">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-24">
-            <div class="senryu-content">写真より<br>大人の輝き<br>素顔ゆえ</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="cast_arai.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">荒井美保さんより：</span>
-                    写真は入口、<br>
-                    魅力の本番はその先に...🩷️<br>
-                    会った人だけが知る輝きを<br>
-                    表現した一句、素敵ですね😍
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_07', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_07">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-25">
-            <div class="senryu-content">いつ逢える？<br>ほどいた指先<br>熱残る</div>
-            <div class="senryu-author-name">P</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    別れ際の余韻が美しく描かれた、大人ならではの一句ですね。<br>
-                    「いつ逢える？」という一言に、名残惜しさと優しい想いが込められていて、とても味わい深く感じました🌿<br>
-                    また素敵な時間を重ねていただけますように。
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_08', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_08">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-19">
-            <div class="senryu-content">左右から<br>何か出そうだ<br>オーガズム</div>
-            <div class="senryu-author-name">ビーチクスキー</div>
-            <div class="staff-comment">
-                <img src="cast_nitta.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">新田多香子さんより：</span>
-                    左右から何が出ちゃうんでしょうね🤭<br>
-                    次回もしっかり確認しなくちゃいけませんね！👮‍♀️<br><br>
-                    川柳応募ありがとうございます🥰🫶
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_09', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_09">...</span>
-            </div>
-        </div>
-
-         <div class="senryu-card" data-date="2026-06-26">
-            <div class="senryu-content">美な笑顔<br>気品に誠実<br>美の熟女</div>
-            <div class="senryu-author-name">I</div>
-            <div class="staff-comment">
-                <img src="cast_arai.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">荒井美保さんより：</span>
-                    笑顔に惹かれ、気品に心が和み、<br>
-                    誠実さにまた逢いたくなる🌹<br>
-                    そんな大人の魅力が伝わる一句ですね✨️<br>
-                    川柳投稿、ありがとうございます🙏
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_10', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_10">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-26">
-            <div class="senryu-content">赤いバラ<br>情熱溢れる<br>美熟女さん</div>
-            <div class="senryu-author-name">I</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    華やかで情熱あふれる一句をありがとうございます✨🌹✨<br>
-                    美熟女へのまっすぐな想いが伝わってきて、思わず笑顔になりました🤗<br>
-                    また素敵な思い出をたくさん重ねてくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_11', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_11">...</span>
-            </div>
-        </div>
-        
-        <div class="senryu-card" data-date="2026-06-26">
-            <div class="senryu-content">コンビニで<br>オキニを見かけて<br>フル勃起</div>
-            <div class="senryu-author-name">I</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    思わず「そんな偶然もあるんですね～！」とクスッとしてしまいました🤭✨<br>
-                    オキニマダムを見かけた時の高揚感が、とても楽しく伝わる一句です♪<br>
-                    プライベートで見かけた際は優しくそっと見守ってあげてくださいネ🥰
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_12', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_12">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-26">
-            <div class="senryu-content">女には<br>人を惑わす<br>色気あり</div>
-            <div class="senryu-author-name">S</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    艶やかで大人の魅力が詰まった一句をありがとうございます✨🌹✨<br>
-                    思わず「その通り！」とうなずいてしまいました🤭<br>
-                    これからも美熟女ならではの魅力を、たくさん見つけてくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_13', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_13">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-28">
-            <div class="senryu-content">目を伏せた<br>うなじの線に<br>艶香る</div>
-            <div class="senryu-author-name">おじゃる</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    「目を伏せた」と「うなじ」の描写が美しく、情景が自然と目に浮かぶ一句ですね。✨<br>
-                    控えめな仕草の中に、大人の色香を感じさせる表現がとても印象的でした。<br>
-                    これからも心に残る素敵なひとときをお過ごしください🐶
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_14', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_14">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-28">
-            <div class="senryu-content">癒されて<br>心満開<br>帰り道</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    「心満開帰り道」というフレーズから、とても満足していただけた様子が伝わってきて、私まで嬉しくなりました🌸<br>
-                    お客様にそのように感じていただけることが、スタッフ一同最高の喜びです😊<br>
-                    また満開の笑顔にお会いできるのを楽しみにしております✨
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_15', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_15">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-28">
-            <div class="senryu-content">無茶ぶりも<br>笑顔に変える<br>電話口</div>
-            <div class="senryu-author-name">Y</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    いつも面白い無茶振りをありがとうございます🤭<br>
-                    電話口でのやり取りを一句にしていただけるなんて、とっても嬉しいです🌼<br>
-                    これからも楽しいお電話、お待ちしております📞もちろんご予約も😉(笑)
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_16', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_16">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-01">
-            <div class="senryu-content">熟れた魅力<br>帰るころには<br>また予約</div>
-            <div class="senryu-author-name">Y</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    楽しいお時間が伝わってくる、心弾む一句ですね🌹✨<br>
-                    「また予約」のひと言に、マダムとのひとときが素敵な思い出になったことを感じて、とても嬉しくなりました🥰<br>
-                    また心ときめく素敵なひとときをお過ごしくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_17', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_17">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-06-30">
-            <div class="senryu-content">お別れの<br>キスは明日の<br>エネルギー</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="cast_nitta.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">新田多香子さんより：</span>
-                    ちゃんとエネルギー満タンになりましたか？🤭💗<br>
-                    多香子はいつでも準備万端でお待ちしています☺️🫶<br>
-                    素敵な川柳ありがとうございます💓
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_18', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_18">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-02">
-            <div class="senryu-content">気がつけば<br>また会いたくなる<br>不思議です</div>
-            <div class="senryu-author-name">K</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    「不思議です」という結びに、余韻が心地よく残る一句ですね🍵<br>
-                    気づけば惹かれている、そんな自然な想いが、とても美しく表現されていました。<br>
-                    また素敵な時間を重ねていただけますように。
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_19', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_19">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-02">
-            <div class="senryu-content">その笑顔<br>反則級の<br>色気です</div>
-            <div class="senryu-author-name">K</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    笑顔の中にふと覗く色気は、まさにマダムならではの魅力ね💄<br>
-                    「反則級」という表現に分かる～と思わず頷いてしまいました🤭<br>
-                    また心ときめく素敵なお時間をお過ごしください🫶
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_20', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_20">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-03">
-            <div class="senryu-content">お気に入り<br>逢える嬉しさ<br>笑みこぼれ</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    「笑みこぼれ」の一言だけで、嬉しさが伝わってくるのが素敵です😊✨<br>
-                    そんなワクワクしたお気持ちが伝わってくる、思わず笑顔になる一句でした🌹<br>
-                    次のご予約も楽しみですネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_21', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_21">...</span>
-            </div>
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-04">
-            <div class="senryu-content">熟女沼<br>何十回でも<br>過去最高</div>
-            <div class="senryu-author-name">T</div>
-            <div class="staff-comment">
-                <img src="cast_arai.png" class="staff-icon" alt="アイコン">
-               <div class="staff-text">
-                    <span class="staff-name">荒井美保さんより：</span>
-                    「今回が一番楽しかった！」と思うたびに、また次もその最高を更新してくれる気がしてしまうのが熟女沼🎀✊<br>
-					推しは尊い👼推ししか勝たん💖です🥰
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_22', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_22">...</span>
-            </div>	
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-04">
-            <div class="senryu-content">とびきりの<br>あなたの笑顔<br>雨あがる</div>
-            <div class="senryu-author-name">たなやん</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    「雨あがる」の締めくくりが、とっても素敵ですネ✨🌈<br>
-                    とびきりの笑顔に、心まで晴れていく情景が目に浮かんで、私まで温かい気持ちになりました🥰<br>
-                    また笑顔あふれる素敵なお時間になりますように♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_23', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_23">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-05">
-            <div class="senryu-content">おおきいな<br>おっぱいちゅー<br>まんぞくだ</div>
-            <div class="senryu-author-name">P</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    一般的な川柳では見られないエロ句、大歓迎です👏(笑)<br>
-                    「まんぞくだ」をひらがなで表現されているところが、なんとも可愛らしくて思わず笑ってしまいました🍒<br>
-                    ストレートな言葉の中にも、楽しかったお気持ちがしっかり伝わってきます😊<br>
-                    またクスッと笑える作品を楽しみにしています♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_24', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_24">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-05">
-            <div class="senryu-content">乱れ髪<br>鎖骨へそっと<br>唇添え</div>
-            <div class="senryu-author-name">O</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    「乱れ髪」が生み出す余韻と、「鎖骨へそっと」という表現がとても印象的でした🍵<br>
-                    直接語りすぎないからこそ、大人の艶やかさが際立つ味わい深い一句ですね。<br>
-                    また素敵な作品を拝見できる日を楽しみにしております😌
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_25', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_25">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-08">
-            <div class="senryu-content">7月の<br>暑さわすれる<br>四十路かな</div>
-            <div class="senryu-author-name">ひろやん</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    暑さを忘れてしまうくらい、マダムとのひとときに夢中になっていただけたんですね🥰✨<br>
-                    そんな素敵なお時間をお過ごしいただけたこと、とても嬉しく思います！<br>
-                    この夏も、心に残る思い出をマダムと一緒にたくさん作ってくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_26', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_26">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-09">
-            <div class="senryu-content">干しぶどう<br>乳操りすぎて<br>サクランボ</div>
-            <div class="senryu-author-name">ビーチクスキー</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    なかなか大胆な表現に、思わず笑ってしまいました🤭✨<br>
-                    発想の面白さと勢いが、この一句の魅力ですネ🍒<br>
-                    また楽しい作品をお待ちしております♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_27', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_27">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-09">
-            <div class="senryu-content">白き肌<br>ふと甘噛み<br>息こぼる</div>
-            <div class="senryu-author-name">O</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    多くを語らずとも情景が浮かぶ、表現力豊かな一句ですね。✨<br>
-                    「甘噛み」という言葉選びが絶妙で、大人の距離感まで伝わってくるようでした。<br>
-                    作品の余韻を楽しませていただきました🌿
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_28', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_28">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-10">
-            <div class="senryu-content">今日もまた<br>濃厚プレイに<br>即撃沈！</div>
-            <div class="senryu-author-name">T</div>
-            <div class="staff-comment">
-                <img src="cast_hotta.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">堀田瞳さんより：</span>
-                    いつも濃厚な時間をありがとう〜🥰<br>
-                    Tさんの素直な素直な気持ちが伝わるgoodな川柳だと思うよ〜<br>
-                    ご褒美あげる〜😚💕
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_29', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_29">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-12">
-            <div class="senryu-content">また来たね<br>その一言で<br>また予約</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    「また来たね」の一言には、不思議な魔法がありますね🤭✨<br>
-                    何気ない言葉だからこそ嬉しくて、また逢いたくなるお気持ちに共感してしまいました♪<br>
-                    また逢いに行って、「また来たね」の魔法をかけてもらってくださいね🤗🪄
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_30', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_30">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-12">
-            <div class="senryu-content">まったりと<br>すごすベットで<br>いやされる</div>
-            <div class="senryu-author-name">P</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    「まったり」と過ごす時間も、マダムとの魅力のひとつですネ🤭🌹<br>
-                    心からリラックスできたご様子が伝わってきて、私まで嬉しくなりました🥰<br>
-                    また癒しのひとときを見つけにいらしてくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_31', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_31">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-12">
-            <div class="senryu-content">夏の海<br>白ワンピ透け<br>風纏う</div>
-            <div class="senryu-author-name">T</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    デートコースをご利用いただいた時の思い出を一句にしてくださり、ありがとうございます👗🐚<br>
-                    「風纏う」という表現が印象的で、夏の空気まで感じられるようでした✨<br>
-                    また素敵な夏の思い出を、たくさん作ってくださいね🌻
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_32', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_32">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-12">
-            <div class="senryu-content">梅雨明けや<br>ベッドの上は<br>大洪水</div>
-            <div class="senryu-author-name">O</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    季節感と遊び心を見事に掛け合わせた、思わず唸る一句ですね🍵<br>
-                    「梅雨明け」と「大洪水」の対比が秀逸で、ユーモアたっぷりに楽しませていただきました😊<br>
-                    また粋な発想の一句を楽しみにしております。
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_33', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_33">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-14">
-            <div class="senryu-content">人気嬢<br>オレよりきっと<br>稼いでる</div>
-            <div class="senryu-author-name">S</div>
-            <div class="staff-comment">
-                <img src="cast_amami.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">天海ありささんより：</span>
-                    これまでメッセージで沢山の俳句を詠み合いましたが、素晴らしい新作出してきて笑いを一本とられました笑
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_34', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_34">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-15">
-            <div class="senryu-content">猛暑日に<br>あなたをもとめて<br>伊予路いく</div>
-            <div class="senryu-author-name">ひろやん</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                		「伊予路」という言葉選びに、お店への想いまで感じられる一句ですね！<br>
-						猛暑の中でも逢いに向かうお気持ちが、軽やかなリズムで伝わってきました。<br>
-						言葉選びのセンスが光る素敵な作品でした😌
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_35', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_35">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-15">
-            <div class="senryu-content">熟女店<br>栄一だけが<br>皆勤賞</div>
-            <div class="senryu-author-name">T</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    とっても面白い一句ですね✨<br>
-                    栄一さんが大活躍してくださる分、私たちも「幸せ」と「癒やし」をたっぷりお返ししますネ🥰<br>
-                    この夏も、暑さを忘れるような素敵なお時間をお過ごしくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_36', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_36">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-17">
-            <div class="senryu-content">濃密な<br>プレイはあなたと<br>だけのもの</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    マダム冥利に尽きる、とても情熱的で素敵なお言葉をありがとうございます🌹<br>
-					他のだれでもない「あなたとだけ」の特別な癒やしを、マダムが心を込めてお届けできたことが伝わり、とても嬉しく思います😊<br>
-					これからも、お二人だけの特別な時間を大切に育んでいただけるよう、心を込めてお迎えいたします📞
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_37', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_37">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-18">
-            <div class="senryu-content">お礼日記<br>笑顔が浮かび<br>予約押す</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    「笑顔が浮かび予約押す」なんて嬉しすぎる一句！🤗<br>
-					キャストが心を込めて書いたお礼日記が真っ直ぐ届いたようで、店長としても本当に幸せです✨<br>
-					次回も日記以上のとびきりの笑顔でお迎えしますので、楽しみにいらしてくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_38', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_38">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-19">
-            <div class="senryu-content">短夜の<br>夢見心地の<br>逢瀬かな</div>
-            <div class="senryu-author-name">T</div>
-            <div class="staff-comment">
-                <img src="cast_nitta.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">新田多香子さんより：</span>
-                    	素敵な川柳ありがとうございます😳💕<br>
-						夢のような時間は本当にあっという間でしたね💗💗<br>
-						次回の逢瀬まで後ろ髪を引かれながらお待ちしています😌
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_39', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_39">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-19">
-            <div class="senryu-content">暑い日に<br>涼しい部屋で<br>熱いふたり</div>
-            <div class="senryu-author-name">Y</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    涼しいお部屋なのに、お二人は熱々ですネ🤭🌹<br>
-					外の暑さなんて忘れてしまうほど、夢中になれるひとときだったんでしょう✨<br>
-					今年の夏も、素敵な思い出をたくさん作ってくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_40', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_40">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-19">
-            <div class="senryu-content">いいえがお<br>いっしょいると<br>ここちいい</div>
-            <div class="senryu-author-name">P</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    「一緒にいると心地いい」とても温かく、何より嬉しいお言葉ですね✨<br>
-					派手な表現ではなくても、その一言に積み重ねた信頼や安心感がしっかりと伝わってきます。<br>
-					マダムにとって、何より心に残る贈り物になったことでしょう😊
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_41', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_41">...</span>
-            </div>  
-        </div>
-
-        <div class="senryu-card" data-date="2026-07-19">
-            <div class="senryu-content">夏の夜に<br>搾り取られて<br>上の空</div>
-            <div class="senryu-author-name">ビーチクスキー</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    夏の暑さ以上の熱いひとときだったことが伝わってきて、思わず笑顔になりました🤭<br>
-					「上の空」の一言に、その夜の満足感がぎゅっと詰まっていますネ♪<br>
-					次回も心に残る素敵な夏の夜になりますように🌙
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_42', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_42">...</span>
-            </div>  
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-21">
-            <div class="senryu-content">別れ際<br>からむ指先<br>次はいつ？</div>
-            <div class="senryu-author-name">ぽせぃ</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    別れ際の一瞬を切り取ったような、美しい一句ですね。✨<br>
-					「次はいつ？」という一言に、お二人の距離感や想いが凝縮されていて、思わず引き込まれました。<br>
-					余韻まで楽しませていただきました🌿
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_43', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_43">...</span>
-            </div>  
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-23">
-            <div class="senryu-content">逢う前の<br>胸の高鳴り<br>帰りまで</div>
-            <div class="senryu-author-name">K</div>
-            <div class="staff-comment">
-                <img src="cast_ozaki.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">尾崎幸子さんより：</span>
-                    逢う前からお帰りの時まで<br>
-					ドキドキしてくださってとっても嬉しいです♡<br>
-					実はわたしもいつもドキドキしていますよ🤭
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_44', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_44">...</span>
-            </div>  
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-23">
-            <div class="senryu-content">逢えぬ日は<br>日記ばかり<br>眺めてる</div>
-            <div class="senryu-author-name">K</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    「日記ばかり眺めてる」のひと言に、次に逢える日を楽しみにされているお気持ちが伝わってきました🫶<br>
-					マダムもきっと、そんな想いを知ったら喜ぶと思います😊<br>
-					また素敵な再会になりますように♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_45', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_45">...</span>
-            </div>  
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-23">
-            <div class="senryu-content">また逢おう<br>火照った顔に<br>後ろ髪</div>
-            <div class="senryu-author-name">H</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    「後ろ髪」という結びに、名残惜しいお気持ちが美しく表れていますね🌿<br>
-					また逢いたいという想いが、五・七・五の中に自然と溶け込んだ素敵な一句でした。<br>
-					余韻まで味わいたくなる作品をありがとうございました😊
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_46', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_46">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-23">
-            <div class="senryu-content">身体より<br>心を癒す<br>五十路姫</div>
-            <div class="senryu-author-name">H</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                   「心を癒す」…このお言葉は、マダムにとって何より嬉しい褒め言葉です🥰<br>
-きっと担当したマダムも、この一句を読んだら照れながら喜んでしまうと思います🤭<br>
-また素敵な一句で、マダムを笑顔にしてあげてくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_47', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_47">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-24">
-            <div class="senryu-content">会うたびに<br>推しが更新<br>止まらない</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    「推しが更新」、思わず「わかります！」と言いたくなる一句でした🤭<br>
-					会うたびに新しい魅力を見つけていただけるなんて、マダムにとっても最高の褒め言葉です🤩<br>
-					これからも推し更新が止まらないくらい、メロメロになっちゃってくださいね🫶💕
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_48', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_48">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-25">
-            <div class="senryu-content">満たされて<br>見送り七歩<br>離れぬ心</div>
-            <div class="senryu-author-name">N</div>
-            <div class="staff-comment">
-                <img src="staff2.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフ柴より：</span>
-                    「七歩」という歩数が入るだけで、その場の空気まで伝わってくるから不思議ですね😊<br>
-					別れ際の名残惜しさと、「離れぬ心」という余韻が静かに重なり、大人ならではの情緒を感じました。<br>
-					読み終えたあとも心に残る、見事な一句でした🍵
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_49', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_49">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-25">
-            <div class="senryu-content">スタイルが<br>とてもいいです<br>いじしてね</div>
-            <div class="senryu-author-name">P</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    こんなお言葉をいただけたら、マダムも自分磨きにますます力が入りますネ🥰<br>
-					「いじしてね」のひと言に、これからも応援したいという優しいお気持ちがぎゅっと詰まっていました♪<br>
-					マダムにとって、何より励みになる素敵な一句をありがとうございました✨
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_50', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_50">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-28">
-            <div class="senryu-content">熟女店<br>自分にすると<br>ギャル店舗</div>
-            <div class="senryu-author-name">マッサージ好き</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    「熟女店」が「ギャル店舗」になるなんて、発想の勝利ですネ🤭✨<br>
-					年齢を重ねるほど、マダムがどんどん若々しく見えてしまうという視点が、とてもユーモアたっぷりでした！<br>
-					何歳になっても、推しギャルを見つけにいらしてくださいネ♪
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_51', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_51">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-29">
-            <div class="senryu-content">ドアを開け<br>会いたかったと<br>抱きしめる</div>
-            <div class="senryu-author-name">S</div>
-            <div class="staff-comment">
-                <img src="staff3.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">スタッフみなみより：</span>
-                    「会いたかった」の一言は、マダムにとって何より嬉しいプレゼントですね🎁<br>
-					ドアを開けた瞬間から伝わる再会の喜びに、お二人の素敵な関係が目に浮かびました😊<br>
-					こんな言葉をいただけたら、マダムもきっと胸がいっぱいになりますね🫶
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_52', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_52">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-29">
-            <div class="senryu-content">推し一人<br>百回超えても<br>ただ一人</div>
-            <div class="senryu-author-name">M</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    こんなお言葉をいただけたら、マダム冥利に尽きますネ👏<br>
-					100回という数字以上に、お二人で積み重ねてこられた時間の尊さが伝わってきました🤗<br>
-					これからも素敵なご縁が、末永く続きますように✨
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_53', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_53">...</span>
-            </div> 
-        </div>
-
-		<div class="senryu-card" data-date="2026-07-31">
-            <div class="senryu-content">舌先で<br>転がされる夏<br>ビーチクボーイ</div>
-            <div class="senryu-author-name">反り待ち硬し</div>
-            <div class="staff-comment">
-                <img src="staff1.png" class="staff-icon" alt="アイコン">
-                <div class="staff-text">
-                    <span class="staff-name">かおる店長より：</span>
-                    夏の情熱と遊び心が絶妙に溶け合った一句ですネ♪<br>
-					……と言いつつ、「ビーチクボーイ」が頭から離れません🤣<br>
-					インパクト抜群のネーミングセンス、お見事でした👏
-                </div>
-            </div>
-            <div class="zabuton-area">
-                <button class="zabuton-btn" onclick="sendZabuton('senryu_54', this, event)">座布団を贈る</button>
-                <span class="count" id="count_senryu_54">...</span>
-            </div> 
-        </div>
-
-
-		
-
+    <div class="tally-header">
+        <h2>
+            🎉 投票受付終了！ 🎉
+            <span class="tally-pulse-text">ただいま集計中</span>
+            です
+        </h2>
     </div>
 
-    <footer>
-        <a href="https://xn--vus92eq8nn9j.com/">← オフィシャルサイトへ戻る</a>
-    </footer>
+    <div class="staff-comment">
+        <img src="staff1.png" class="staff-icon" alt="かおる店長">
+        <div class="staff-text">
+            <span class="staff-name">かおる店長より：</span>
+            皆様、たくさんの川柳投稿＆<br>
+            熱い座布団投票、<br>
+            本当にありがとうございました！💕<br>
+            <br>
+            どれも面白くて、私たちも毎日<br>
+            とっても楽しませていただきました✨<br>
+            <br>
+            ただいま、どの作品が栄えある賞に<br>
+            輝くのかドキドキの集計中です！<br>
+            結果発表までもう少々お待ちくださいネ🥰
+        </div>
+    </div>
+
+    <div class="all-entries-box">
+        <div class="all-entries-title">＼ 集計中も作品をチェック！ ／</div>
+        <a href="entries.html" class="all-entries-btn">
+            📜 全応募作品一覧を見る ➔
+        </a>
+    </div>
+
+    <div class="prizes-preview">
+        <h3>🎁 今回発表される豪華賞品のおさらい 🎁</h3>
+        
+        <div class="prize-item gold">
+            <div class="prize-name">🥇 金賞（1名様）</div>
+            <div class="prize-desc">座布団を最も集めた栄えある一句</div>
+            <div class="prize-reward">10,000円割引 プレゼント！</div>
+        </div>
+
+        <div class="prize-item kaoru">
+            <div class="prize-name">🌹 かおる店長賞（1名様）</div>
+            <div class="prize-desc">店長が唸った、愛ある一句</div>
+            <div class="prize-reward">5,000円割引 プレゼント！</div>
+        </div>
+
+        <div class="prize-item madam">
+            <div class="prize-name">💋 マダム賞（2名様）</div>
+            <div class="prize-desc">キャスト陣がワイワイ選ぶお気に入り句</div>
+            <div class="prize-reward">5,000円分オプション無料！</div>
+        </div>
+    </div>
+    
+    <div class="announce-date">
+        結果発表は8月9日(日)昼頃予定！お楽しみに✨
+    </div>
+
+    <!-- オフィシャルサイトへ戻るボタン -->
+    <a href="https://xn--vus92eq8nn9j.com/" class="official-site-btn">
+        オフィシャルサイトへ戻る ➔
+    </a>
 </div>
-
-<script>
-    const firebaseConfig = {
-    apiKey: "AIzaSyAdrKPQuXQSi822RCS6x48WBzmUj_B0VRo",
-    authDomain: "senryu-app-8d069.firebaseapp.com",
-    databaseURL: "https://senryu-app-8d069-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "senryu-app-8d069",
-    storageBucket: "senryu-app-8d069.firebasestorage.app",
-    messagingSenderId: "190660604196",
-    appId: "1:190660604196:web:e97e7626f49a8be0d643b1"
-};
-
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-const targetDate = new Date("2026-07-31T23:59:59+09:00").getTime();
-
-function getJstDateString() {
-    return new Date(Date.now() + 9 * 60 * 60 * 1000).toISOString().split('T')[0];
-}
-
-function sortSenryu(type, btn) {
-    const container = document.getElementById('senryuContainer');
-    const cards = Array.from(container.getElementsByClassName('senryu-card'));
-    document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    if (type === 'random') { 
-        cards.sort(() => Math.random() - 0.5); 
-    } else { 
-        cards.sort((a, b) => new Date(b.dataset.date) - new Date(a.dataset.date)); 
-    }
-    
-    container.innerHTML = '';
-    cards.forEach(card => container.appendChild(card));
-    syncCounts();
-}
-
-function syncCounts() {
-    const now = new Date().getTime();
-    const countElements = document.querySelectorAll('.count');
-    const currentToday = getJstDateString(); 
-    
-    countElements.forEach(el => {
-        const id = el.id.replace('count_', '');
-        database.ref('counts/' + id).off();
-        database.ref('counts/' + id).on('value', (snapshot) => { 
-            el.innerText = snapshot.val() || 0; 
-        });
-        
-        const btn = el.previousElementSibling;
-        
-        if (now >= targetDate) {
-            btn.innerText = "投票終了";
-            btn.disabled = true;
-        } else {
-            const hasVoted = localStorage.getItem('voted_' + id + '_' + currentToday);
-            if (hasVoted) {
-                btn.innerText = "本日は済み";
-                btn.disabled = true;
-            } else {
-                btn.innerText = "座布団を贈る";
-                btn.disabled = false;
-            }
-        }
-    });
-}
-
-function sendZabuton(id, btn, e) {
-    const now = new Date().getTime();
-    if (now >= targetDate) return;
-
-    const currentToday = getJstDateString();
-    const hasVoted = localStorage.getItem('voted_' + id + '_' + currentToday);
-    if (hasVoted) return;
-
-    const effect = document.createElement('div');
-    effect.className = 'zabuton-effect';
-    effect.innerText = '🟫✨';
-    effect.style.left = e.clientX + 'px';
-    effect.style.top = e.clientY + 'px';
-    document.body.appendChild(effect);
-    setTimeout(() => {
-        effect.style.transform = 'translateY(-150px) rotate(25deg) scale(1.2)';
-        effect.style.opacity = '0';
-    }, 50);
-    setTimeout(() => { effect.remove(); }, 1000);
-
-    database.ref('counts/' + id).transaction((current) => (current || 0) + 1);
-    
-    localStorage.setItem('voted_' + id + '_' + currentToday, "true");
-    btn.innerText = "本日は済み";
-    btn.disabled = true;
-}
-
-function updateCountdown() {
-    const now = new Date().getTime();
-    const diff = targetDate - now;
-    const timerElement = document.getElementById("countdownTimer");
-
-    if (diff <= 0) {
-        timerElement.innerHTML = "投票は締め切られました。たくさんのご投票ありがとうございました！";
-        document.querySelectorAll('.zabuton-btn').forEach(btn => {
-            btn.innerText = "投票終了";
-            btn.disabled = true;
-        });
-        return;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    timerElement.innerHTML = `<span>${days}</span>日 <span>${hours}</span>時間 <span>${minutes}</span>分 <span>${seconds}</span>秒`;
-}
-
-setInterval(updateCountdown, 1000);
-
-window.onload = function() {
-    const randomBtn = document.getElementById('btn-random');
-    sortSenryu('random', randomBtn);
-    updateCountdown();
-};
-</script>
-
-</body>
-</html>
