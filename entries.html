@@ -1,0 +1,312 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+    @keyframes slowPulse {
+        0% {
+            transform: scale(1);
+            opacity: 0.9;
+        }
+        50% {
+            transform: scale(1.05);
+            opacity: 1;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+        100% {
+            transform: scale(1);
+            opacity: 0.9;
+        }
+    }
+
+    body {
+        background-image: url('background.png');
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+        margin: 0;
+        padding: 0;
+    }
+
+    .tallying-wrapper {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 15px;
+        text-align: center;
+        font-family: sans-serif;
+        box-sizing: border-box;
+    }
+    .tally-logo {
+        max-width: 100%;
+        height: auto;
+        margin-bottom: 15px;
+    }
+    .result-schedule {
+        font-size: 16px;
+        font-weight: bold;
+        color: #b8860b;
+        background: rgba(255, 255, 255, 0.85);
+        border: 1px solid #e8cc7d;
+        border-radius: 20px;
+        padding: 8px 15px;
+        display: inline-block;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .tally-header h2 {
+        color: #d4af37;
+        margin-bottom: 25px;
+        font-size: 20px;
+        line-height: 1.6;
+        font-weight: bold;
+    }
+    .tally-pulse-text {
+        display: block;
+        font-size: 28px;
+        margin: 12px 0;
+        animation: slowPulse 4s ease-in-out infinite;
+    }
+    .staff-comment {
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #eee;
+        border-radius: 12px;
+        padding: 15px;
+        margin-bottom: 25px;
+        text-align: left;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+    .staff-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        float: left;
+        margin-right: 12px;
+    }
+    .staff-text {
+        overflow: hidden;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #333;
+    }
+    .staff-name {
+        font-weight: bold;
+        color: #8b4513;
+        display: block;
+        margin-bottom: 8px;
+    }
+
+    /* 応募作品一覧案内エリア（プライマリボタン） */
+    .all-entries-box {
+        background: rgba(255, 255, 255, 0.98);
+        border: 2px solid #d4af37;
+        border-radius: 16px;
+        padding: 22px 15px;
+        margin: 25px 0 35px;
+        text-align: center;
+        box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
+    }
+    .all-entries-title {
+        margin: 0 0 12px;
+        font-weight: bold;
+        color: #8b4513;
+        font-size: 16px;
+        letter-spacing: 0.5px;
+    }
+
+    .all-entries-btn {
+        display: inline-block;
+        width: 100%;
+        max-width: 320px;
+        padding: 15px 20px;
+        background: linear-gradient(135deg, #b8860b 0%, #8b4513 100%);
+        color: #ffffff;
+        font-size: 17px;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 30px;
+        box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+        position: relative;
+        overflow: hidden;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    }
+
+    .all-entries-btn::after {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -60%;
+        width: 50%;
+        height: 200%;
+        background: rgba(255, 255, 255, 0.25);
+        transform: rotate(30deg);
+        animation: shine 3.5s infinite;
+    }
+
+    @keyframes shine {
+        0% { left: -60%; }
+        20% { left: 120%; }
+        100% { left: 120%; }
+    }
+
+    .all-entries-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(139, 69, 19, 0.4);
+        opacity: 0.95;
+    }
+
+    .prizes-preview h3 {
+        font-size: 18px;
+        color: #333;
+        margin-top: 30px;
+        margin-bottom: 15px;
+        border-bottom: 1px dashed #ccc;
+        padding-bottom: 10px;
+    }
+    .prize-item {
+        background: rgba(255, 255, 255, 0.95);
+        margin-bottom: 12px;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 6px solid #ccc;
+        text-align: left;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .prize-item.gold { border-left-color: #d4af37; }
+    .prize-item.kaoru { border-left-color: #c2185b; }
+    .prize-item.madam { border-left-color: #ff69b4; }
+    .prize-name {
+        font-weight: bold;
+        font-size: 16px;
+        margin-bottom: 5px;
+    }
+    .prize-desc {
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 5px;
+    }
+    .prize-reward {
+        font-weight: bold;
+        color: #d11a2a;
+        font-size: 16px;
+    }
+    .announce-date {
+        margin-top: 30px;
+        margin-bottom: 25px;
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+        background: rgba(255, 255, 255, 0.9);
+        padding: 15px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+    }
+
+    /* オフィシャルサイトへ戻るボタン */
+    .official-site-btn {
+        display: inline-block;
+        width: 100%;
+        max-width: 320px;
+        margin: 15px auto 30px;
+        padding: 13px 20px;
+        background: #ffffff;
+        color: #8b4513;
+        font-size: 16px;
+        font-weight: bold;
+        text-decoration: none;
+        border-radius: 30px;
+        border: 2px solid #b8860b;
+        box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        box-sizing: border-box;
+    }
+    .official-site-btn:hover {
+        background: #fffdf0;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    @media screen and (min-width: 480px) {
+        .result-schedule { font-size: 18px; }
+        .tally-header h2 { font-size: 24px; }
+        .tally-pulse-text { font-size: 32px; }
+        .staff-text { font-size: 16px; }
+        .prizes-preview h3 { font-size: 20px; }
+        .prize-name { font-size: 18px; }
+        .prize-desc { font-size: 14px; }
+        .prize-reward { font-size: 18px; }
+        .announce-date { font-size: 18px; }
+        .official-site-btn { font-size: 17px; }
+    }
+</style>
+
+<div class="tallying-wrapper">
+    <img src="logo.png" class="tally-logo" alt="ロゴ">
+
+    <div class="result-schedule">
+        📅 結果発表：8月9日(日) 昼頃を予定！
+    </div>
+
+    <div class="tally-header">
+        <h2>
+            🎉 投票受付終了！ 🎉
+            <span class="tally-pulse-text">ただいま集計中</span>
+            です
+        </h2>
+    </div>
+
+    <div class="staff-comment">
+        <img src="staff1.png" class="staff-icon" alt="かおる店長">
+        <div class="staff-text">
+            <span class="staff-name">かおる店長より：</span>
+            皆様、たくさんの川柳投稿＆<br>
+            熱い座布団投票、<br>
+            本当にありがとうございました！💕<br>
+            <br>
+            どれも面白くて、私たちも毎日<br>
+            とっても楽しませていただきました✨<br>
+            <br>
+            ただいま、どの作品が栄えある賞に<br>
+            輝くのかドキドキの集計中です！<br>
+            結果発表までもう少々お待ちくださいネ🥰
+        </div>
+    </div>
+
+    <div class="all-entries-box">
+        <div class="all-entries-title">＼ 集計中も作品をチェック！ ／</div>
+        <a href="entries.html" class="all-entries-btn">
+            📜 全応募作品一覧を見る ➔
+        </a>
+    </div>
+
+    <div class="prizes-preview">
+        <h3>🎁 今回発表される豪華賞品のおさらい 🎁</h3>
+        
+        <div class="prize-item gold">
+            <div class="prize-name">🥇 金賞（1名様）</div>
+            <div class="prize-desc">座布団を最も集めた栄えある一句</div>
+            <div class="prize-reward">10,000円割引 プレゼント！</div>
+        </div>
+
+        <div class="prize-item kaoru">
+            <div class="prize-name">🌹 かおる店長賞（1名様）</div>
+            <div class="prize-desc">店長が唸った、愛ある一句</div>
+            <div class="prize-reward">5,000円割引 プレゼント！</div>
+        </div>
+
+        <div class="prize-item madam">
+            <div class="prize-name">💋 マダム賞（2名様）</div>
+            <div class="prize-desc">キャスト陣がワイワイ選ぶお気に入り句</div>
+            <div class="prize-reward">5,000円分オプション無料！</div>
+        </div>
+    </div>
+    
+    <div class="announce-date">
+        結果発表は8月9日(日)昼頃予定！お楽しみに✨
+    </div>
+
+    <!-- オフィシャルサイトへ戻るボタン -->
+    <a href="https://xn--vus92eq8nn9j.com/" class="official-site-btn">
+        オフィシャルサイトへ戻る ➔
+    </a>
+</div>
