@@ -1,20 +1,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-    @keyframes slowPulse {
-        0% {
-            transform: scale(1);
-            opacity: 0.9;
-        }
-        50% {
-            transform: scale(1.05);
-            opacity: 1;
-            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
-        }
-        100% {
-            transform: scale(1);
-            opacity: 0.9;
-        }
+    @keyframes goldGlow {
+        0% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+        50% { box-shadow: 0 0 30px rgba(251, 192, 45, 0.8); }
+        100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+    }
+
+    @keyframes popIn {
+        0% { transform: scale(0.9); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
     }
 
     body {
@@ -27,7 +22,7 @@
         padding: 0;
     }
 
-    .tallying-wrapper {
+    .result-wrapper {
         max-width: 600px;
         margin: 0 auto;
         padding: 15px;
@@ -35,42 +30,45 @@
         font-family: sans-serif;
         box-sizing: border-box;
     }
-    .tally-logo {
+
+    .result-logo {
         max-width: 100%;
         height: auto;
         margin-bottom: 15px;
     }
-    .result-schedule {
-        font-size: 16px;
-        font-weight: bold;
-        color: #b8860b;
-        background: rgba(255, 255, 255, 0.85);
-        border: 1px solid #e8cc7d;
-        border-radius: 20px;
-        padding: 8px 15px;
-        display: inline-block;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-    .tally-header h2 {
-        color: #d4af37;
+
+    .result-header {
+        background: rgba(255, 255, 255, 0.95);
+        border: 2px solid #d4af37;
+        border-radius: 15px;
+        padding: 15px 10px;
         margin-bottom: 25px;
-        font-size: 20px;
-        line-height: 1.6;
+        box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+        animation: popIn 0.8s ease-out;
+        box-sizing: border-box;
+        overflow: hidden;
+    }
+    .result-title-sub {
+        font-size: 14px;
+        color: #b8860b;
         font-weight: bold;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
     }
-    .tally-pulse-text {
+    .result-title-img {
+        width: 100%;
+        max-width: 280px;
+        height: auto;
         display: block;
-        font-size: 28px;
-        margin: 12px 0;
-        animation: slowPulse 4s ease-in-out infinite;
+        margin: 0 auto;
     }
+
     .staff-comment {
         background: rgba(255, 255, 255, 0.95);
         border: 1px solid #eee;
         border-radius: 12px;
         padding: 15px;
-        margin-bottom: 25px;
+        margin-bottom: 30px;
         text-align: left;
         box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
@@ -94,13 +92,162 @@
         margin-bottom: 8px;
     }
 
-    /* 応募作品一覧案内エリア（プライマリボタン） */
+    .award-card {
+        background: rgba(255, 255, 255, 0.98);
+        border-radius: 16px;
+        padding: 20px 15px;
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative;
+        box-sizing: border-box;
+    }
+
+    .award-card.gold-award {
+        border: 3px solid #d4af37;
+        animation: goldGlow 3s infinite ease-in-out;
+        background: linear-gradient(180deg, #fffdf0 0%, #ffffff 100%);
+    }
+
+    .award-badge-gold {
+        background: linear-gradient(135deg, #f12711, #f5af19);
+        color: #fff;
+        font-size: 22px;
+        font-weight: bold;
+        padding: 10px 24px;
+        border-radius: 30px;
+        display: inline-block;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+        letter-spacing: 1px;
+    }
+
+    .award-card.kaoru-award { border: 2px solid #c2185b; }
+    .award-badge-kaoru {
+        background: linear-gradient(135deg, #e91e63, #880e4f);
+        color: #fff;
+        font-size: 19px;
+        font-weight: bold;
+        padding: 8px 20px;
+        border-radius: 25px;
+        display: inline-block;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 8px rgba(194, 24, 91, 0.3);
+    }
+
+    .award-card.madam-award { border: 2px solid #ff69b4; }
+    .award-badge-madam {
+        background: #ff69b4;
+        color: #fff;
+        font-size: 19px;
+        font-weight: bold;
+        padding: 8px 20px;
+        border-radius: 25px;
+        display: inline-block;
+        margin-bottom: 15px;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    }
+
+    .senryu-box {
+        background: #fff8e7;
+        border: 1px dashed #d4af37;
+        border-radius: 10px;
+        padding: 20px 10px;
+        margin: 15px 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    }
+
+    .senryu-stamp {
+        position: absolute;
+        top: 12px;
+        right: 15px;
+        width: 34px;
+        height: 34px;
+        border: 2px solid #c0392b;
+        border-radius: 6px;
+        color: #c0392b;
+        font-size: 20px;
+        font-weight: bold;
+        line-height: 32px;
+        text-align: center;
+        transform: rotate(-12deg);
+        opacity: 0.85;
+        font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+        user-select: none;
+        box-shadow: 0 0 1px rgba(192, 57, 43, 0.5);
+    }
+
+    .senryu-vertical {
+        writing-mode: vertical-rl;
+        -webkit-writing-mode: vertical-rl;
+        text-align: start;
+        font-size: 22px;
+        font-weight: bold;
+        color: #2c3e50;
+        line-height: 2.0;
+        letter-spacing: 3px;
+        height: 180px; 
+        margin: 0 auto;
+        font-family: "Yu Mincho", "Hiragino Mincho ProN", serif;
+    }
+    
+    .senryu-author {
+        margin-top: 15px;
+        font-size: 18px;
+        color: #555555;
+        text-align: right;
+        width: 100%;
+        font-weight: bold;
+        padding-right: 10px;
+        box-sizing: border-box;
+    }
+
+    .award-info {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background: #fcf8e3;
+        padding: 10px;
+        border-radius: 8px;
+        margin-top: 15px;
+        font-size: 14px;
+    }
+    .zabuton-count {
+        color: #d35400;
+        font-weight: bold;
+        font-size: 16px;
+    }
+    .prize-detail {
+        color: #c0392b;
+        font-weight: bold;
+        font-size: 16px;
+    }
+
+    .award-comment {
+        margin-top: 14px;
+        font-size: 15px;
+        color: #333;
+        background: #fdfdfd;
+        border: 1px solid #eaeaea;
+        padding: 12px 14px;
+        border-radius: 8px;
+        text-align: left;
+        line-height: 1.8;
+    }
+    .comment-label {
+        font-weight: bold;
+        color: #8b4513;
+        font-size: 15px;
+    }
+
     .all-entries-box {
         background: rgba(255, 255, 255, 0.98);
         border: 2px solid #d4af37;
         border-radius: 16px;
         padding: 22px 15px;
-        margin: 25px 0 35px;
+        margin: 35px 0;
         text-align: center;
         box-shadow: 0 6px 15px rgba(212, 175, 55, 0.25);
     }
@@ -155,54 +302,54 @@
         opacity: 0.95;
     }
 
-    .prizes-preview h3 {
-        font-size: 18px;
-        color: #333;
-        margin-top: 30px;
-        margin-bottom: 15px;
-        border-bottom: 1px dashed #ccc;
-        padding-bottom: 10px;
-    }
-    .prize-item {
+    .claim-info-box {
         background: rgba(255, 255, 255, 0.95);
-        margin-bottom: 12px;
-        padding: 15px;
+        border: 2px solid #d4af37;
+        border-radius: 12px;
+        padding: 20px 15px;
+        margin: 30px 0 20px;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.08);
+    }
+    .claim-title {
+        font-size: 17px;
+        font-weight: bold;
+        color: #8b4513;
+        border-bottom: 1px solid #e8cc7d;
+        padding-bottom: 8px;
+        margin-bottom: 14px;
+        text-align: center;
+    }
+    .claim-text {
+        font-size: 15px;
+        line-height: 1.8;
+        color: #333;
+        text-align: center;
+    }
+    .claim-keyword {
+        color: #8b4513;
+        font-size: 17px;
+        font-weight: bold;
+        background: #fff8dc;
+        padding: 6px 14px;
         border-radius: 8px;
-        border-left: 6px solid #ccc;
-        text-align: left;
+        border: 2px dashed #d4af37;
+        display: inline-block;
+        margin: 8px 0;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .prize-item.gold { border-left-color: #d4af37; }
-    .prize-item.kaoru { border-left-color: #c2185b; }
-    .prize-item.madam { border-left-color: #ff69b4; }
-    .prize-name {
+    .claim-deadline {
+        margin-top: 16px;
+        background: #fff3cd;
+        border: 1px solid #ffeeba;
+        color: #856404;
+        padding: 10px 12px;
+        border-radius: 6px;
         font-weight: bold;
-        font-size: 16px;
-        margin-bottom: 5px;
-    }
-    .prize-desc {
-        font-size: 13px;
-        color: #666;
-        margin-bottom: 5px;
-    }
-    .prize-reward {
-        font-weight: bold;
-        color: #d11a2a;
-        font-size: 16px;
-    }
-    .announce-date {
-        margin-top: 30px;
-        margin-bottom: 25px;
-        font-weight: bold;
-        font-size: 16px;
-        color: #333;
-        background: rgba(255, 255, 255, 0.9);
-        padding: 15px;
-        border-radius: 5px;
-        border: 1px solid #ddd;
+        font-size: 14px;
+        text-align: center;
     }
 
-    /* オフィシャルサイトへ戻るボタン */
     .official-site-btn {
         display: inline-block;
         width: 100%;
@@ -227,82 +374,141 @@
     }
 
     @media screen and (min-width: 480px) {
-        .result-schedule { font-size: 18px; }
-        .tally-header h2 { font-size: 24px; }
-        .tally-pulse-text { font-size: 32px; }
-        .staff-text { font-size: 16px; }
-        .prizes-preview h3 { font-size: 20px; }
-        .prize-name { font-size: 18px; }
-        .prize-desc { font-size: 14px; }
-        .prize-reward { font-size: 18px; }
-        .announce-date { font-size: 18px; }
+        .senryu-vertical { font-size: 24px; height: 200px; }
+        .senryu-author { font-size: 20px; }
+        .award-badge-gold { font-size: 24px; }
+        .award-badge-kaoru, .award-badge-madam { font-size: 21px; }
         .official-site-btn { font-size: 17px; }
+        .claim-text { font-size: 16px; }
+        .claim-keyword { font-size: 18px; }
+        .award-comment { font-size: 16px; }
+        .comment-label { font-size: 16px; }
     }
 </style>
 
-<div class="tallying-wrapper">
-    <img src="logo.png" class="tally-logo" alt="ロゴ">
+<div class="result-wrapper">
+    <img src="logo.png" class="result-logo" alt="熟せん川柳 夏の陣">
 
-    <div class="result-schedule">
-        📅 結果発表：8月9日(日) 昼頃を予定！
-    </div>
-
-    <div class="tally-header">
-        <h2>
-            🎉 投票受付終了！ 🎉
-            <span class="tally-pulse-text">ただいま集計中</span>
-            です
-        </h2>
+    <div class="result-header">
+        <div class="result-title-sub">✨ 第1回 大人の川柳コンテスト ✨</div>
+        <img src="結果発表ロゴ.png" class="result-title-img" alt="結果発表">
     </div>
 
     <div class="staff-comment">
         <img src="staff1.png" class="staff-icon" alt="かおる店長">
         <div class="staff-text">
             <span class="staff-name">かおる店長より：</span>
-            皆様、たくさんの川柳投稿＆<br>
-            熱い座布団投票、<br>
-            本当にありがとうございました！💕<br>
+            皆様、たくさんのご応募と座布団投票、<br>
+            本当にありがとうございました✨<br>
+            どの作品も情熱やクスッと笑えるセンスが溢れていて<br>
+            選考は大難航…💦<br>
             <br>
-            どれも面白くて、私たちも毎日<br>
-            とっても楽しませていただきました✨<br>
-            <br>
-            ただいま、どの作品が栄えある賞に<br>
-            輝くのかドキドキの集計中です！<br>
-            結果発表までもう少々お待ちくださいネ🥰
+            皆様の熱い1票で選ばれた栄えある受賞作品を、<br>
+            ここに発表いたします♪
+        </div>
+    </div>
+
+    <div class="award-card gold-award">
+        <div class="award-badge-gold">🥇 金賞（1名様）</div>
+        
+        <div class="senryu-box">
+            <div class="senryu-stamp">選</div>
+            <div class="senryu-vertical">
+                熟女沼<br>何十回でも<br>過去最高
+            </div>
+            <div class="senryu-author">T様</div>
+        </div>
+
+        <div class="award-info">
+            <span class="zabuton-count">獲得座布団: 359枚！</span>
+            <span class="prize-detail">🎁 10,000円割引</span>
+        </div>
+        
+        <div class="award-comment">
+            💬 <span class="comment-label">店長より：</span> 
+            最高の川柳をありがとうございます✨<br>
+            最も多くの座布団を集めた見事な一句！満場一致の金賞ですネ♪<br>
+            五十路マダムの熟女沼は一度ハマったら抜け出せないはず☆彡<br>
+            何度でも「過去最高」をお届けできるよう、心を込めておもてなしいたします<br>
+            これからも末永く、熟女達を愛してくださいね💖<br>
+        </div>
+    </div>
+
+    <div class="award-card kaoru-award">
+        <div class="award-badge-kaoru">🌹 かおる店長賞（1名様）</div>
+        
+        <div class="senryu-box">
+            <div class="senryu-stamp">選</div>
+            <div class="senryu-vertical">
+                日記見て<br>実物求め<br>足が向く
+            </div>
+            <div class="senryu-author">K様</div>
+        </div>
+
+        <div class="award-info">
+            <span class="prize-detail">🎁 5,000円割引</span>
+        </div>
+
+        <div class="award-comment">
+            💬 <span class="comment-label">店長より：</span> 
+            心温まる川柳をありがとうございます✨<br>
+            お客様が日記をキッカケに足を運んでくださった事が、とても嬉しく思います♪<br>
+            日々、施行錯誤しながら写メ日記を頑張るマダムを店長としても全力でバックアップしてまいります☆彡<br>
+            挑戦を続けるマダムの投稿を、ぜひこれからも楽しみにチェックして、また、逢いに来てくださいネ💖<br>
+        </div>
+    </div>
+
+    <div class="award-card madam-award">
+        <div class="award-badge-madam">💋 マダム賞（1名様）</div>
+        
+        <div class="senryu-box">
+            <div class="senryu-stamp">選</div>
+            <div class="senryu-vertical">
+                お気に入り<br>逢える嬉しさ<br>笑みこぼれ
+            </div>
+            <div class="senryu-author">M様</div>
+        </div>
+
+        <div class="award-info">
+            <span class="prize-detail">🎁 5,000円分オプション無料</span>
+        </div>
+    </div>
+
+    <div class="award-card madam-award">
+        <div class="award-badge-madam">💋 マダム賞（1名様）</div>
+        
+        <div class="senryu-box">
+            <div class="senryu-stamp">選</div>
+            <div class="senryu-vertical">
+                人気嬢<br>オレよりきっと<br>稼いでる
+            </div>
+            <div class="senryu-author">S様</div>
+        </div>
+
+        <div class="award-info">
+            <span class="prize-detail">🎁 5,000円分オプション無料</span>
         </div>
     </div>
 
     <div class="all-entries-box">
-        <div class="all-entries-title">＼ 集計中も作品をチェック！ ／</div>
-            <a href="entries.html" class="all-entries-btn">
-                📜 全応募作品一覧を見る ➔
-            </a>
+        <div class="all-entries-title">＼ クスッと笑える名作がズラリ！ ／</div>
+        <a href="tally.html" class="all-entries-btn">
+            📜 全応募作品一覧を見る ➔
+        </a>
     </div>
 
-    <div class="prizes-preview">
-        <h3>🎁 今回発表される豪華賞品のおさらい 🎁</h3>
-        
-        <div class="prize-item gold">
-            <div class="prize-name">🥇 金賞（1名様）</div>
-            <div class="prize-desc">座布団を最も集めた栄えある一句</div>
-            <div class="prize-reward">10,000円割引 プレゼント！</div>
+    <div class="claim-info-box">
+        <div class="claim-title">🎁 受賞されたお客様へ（特典の適用方法）</div>
+        <div class="claim-text">
+            ご受賞おめでとうございます！🎉<br>
+            賞品のお受け取りは、次回ご予約時に<br>
+            <span class="claim-keyword">「川柳イベントの特典を使用」</span><br>
+            とお伝えいただくだけでOKです！<br>
+            その場ですぐに割引・特典を適用させていただきます✨
         </div>
-
-        <div class="prize-item kaoru">
-            <div class="prize-name">🌹 かおる店長賞（1名様）</div>
-            <div class="prize-desc">店長が唸った、愛ある一句</div>
-            <div class="prize-reward">5,000円割引 プレゼント！</div>
+        <div class="claim-deadline">
+            ⏳ 特典有効期限：2026年10月31日(土)まで
         </div>
-
-        <div class="prize-item madam">
-            <div class="prize-name">💋 マダム賞（2名様）</div>
-            <div class="prize-desc">キャスト陣がワイワイ選ぶお気に入り句</div>
-            <div class="prize-reward">5,000円分オプション無料！</div>
-        </div>
-    </div>
-    
-    <div class="announce-date">
-        結果発表は8月9日(日)昼頃予定！お楽しみに✨
     </div>
 
     <a href="https://xn--vus92eq8nn9j.com/" class="official-site-btn">
