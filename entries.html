@@ -12,14 +12,14 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>夏の熟せん川柳大会 | 全応募作品一覧（集計中）</title>
+    <title>夏の熟せん川柳大会 | 全応募作品一覧</title>
 
     <link rel="icon" href="favicon.png" type="image/png">
 
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-database-compat.js"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Sans+JP:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;700&family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -60,51 +60,65 @@
             background: rgba(253, 250, 242, 0.3); 
         }
 
-        header { text-align: center; margin-bottom: 20px; }
+        header { text-align: center; margin-bottom: 25px; }
         .logo-area { text-align: center; margin: 0; }
         .main-logo { max-width: 100%; height: auto; display: inline-block; }
 
         .event-period {
             color: var(--accent-color);
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: bold;
             letter-spacing: 0.1rem;
             margin-top: -5px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-shadow: 1px 1px 2px white;
+        }
+
+        .result-link-box {
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--accent-color);
+            border-radius: 14px;
+            padding: 16px 12px;
+            margin: 20px auto 25px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.25);
+        }
+
+        .result-link-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #8b4513;
+            margin-bottom: 10px;
+        }
+
+        .result-btn {
+            display: inline-block;
+            width: 100%;
+            max-width: 320px;
+            padding: 12px 18px;
+            background: linear-gradient(135deg, #f12711, #f5af19);
+            color: #ffffff;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 25px;
+            box-shadow: 0 4px 10px rgba(241, 39, 17, 0.3);
+            transition: all 0.3s ease;
+            box-sizing: border-box;
+        }
+
+        .result-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 14px rgba(241, 39, 17, 0.4);
+            opacity: 0.95;
         }
 
         header p {
             font-weight: bold;
             text-shadow: 1px 1px 2px white;
-        }
-
-        .countdown-container {
-            background: rgba(255, 255, 255, 0.9);
-            border: 2px solid var(--accent-color);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 15px auto;
-            max-width: 420px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        }
-        .countdown-title {
-            font-size: 0.85rem;
-            font-weight: bold;
-            color: var(--text-color);
-            margin-bottom: 5px;
-            letter-spacing: 0.05rem;
-        }
-        .countdown-timer {
-            font-family: 'Noto Sans JP', sans-serif;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: var(--zabuton-color);
-            letter-spacing: 0.05rem;
-        }
-        .countdown-timer span {
-            font-size: 1.5rem;
-            margin: 0 2px;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            margin-top: 15px;
         }
 
         .sort-controls { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
@@ -144,7 +158,8 @@
         footer { text-align: center; margin-top: 60px; padding-bottom: 40px; }
         footer a { 
             color: var(--accent-color); text-decoration: none; font-size: 0.9rem; 
-            background: white; padding: 5px 15px; border-radius: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            background: white; padding: 8px 18px; border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            font-weight: bold;
         }
     </style>
 </head>
@@ -157,14 +172,16 @@
         <div class="logo-area">
             <img src="logo.png" alt="五十路マダム松山店 熟せん川柳 夏の陣" class="main-logo">
         </div>
-        <div class="event-period">2026.06.15 - 07.31 開催<br>2026.08.09 結果発表</div>
+        <div class="event-period">2026.06.15 - 07.31 開催<br>✨ 2026.08.09 結果発表 ✨</div>
 
-        <div class="countdown-container">
-            <div class="countdown-title">🎉 最終結果発表（8/9 12:00）まで あと</div>
-            <div class="countdown-timer" id="countdownTimer">集計中...</div>
+        <div class="result-link-box">
+            <div class="result-link-title">🎉 栄えある受賞作品をチェック！</div>
+            <a href="result.html" class="result-btn">
+                🏆 結果発表ページを見る ➔
+            </a>
         </div>
 
-        <p>たくさんの熱い投稿＆ご投票ありがとうございました！<br>集計期間中も全54作品をお楽しみいただけます✨</p>
+        <p>たくさんの熱いご応募＆ご投票、誠にありがとうございました！<br>皆様から寄せられた全54作品とコメントをぜひお楽しみください✨</p>
     </header>
 
     <div class="sort-controls">
@@ -942,14 +959,14 @@
 </div>
 
 <script>
-// 結果発表の日時設定：2026年8月9日 12:00
-const resultDate = new Date("2026-08-09T12:00:00+09:00").getTime();
-
 function sortSenryu(type, btn) {
     const container = document.getElementById('senryuContainer');
     const cards = Array.from(container.getElementsByClassName('senryu-card'));
+
     document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+    if (btn) {
+        btn.classList.add('active');
+    }
     
     if (type === 'random') { 
         cards.sort(() => Math.random() - 0.5); 
@@ -961,30 +978,10 @@ function sortSenryu(type, btn) {
     cards.forEach(card => container.appendChild(card));
 }
 
-function updateCountdown() {
-    const now = new Date().getTime();
-    const diff = resultDate - now;
-    const timerElement = document.getElementById("countdownTimer");
-
-    if (diff <= 0) {
-        timerElement.innerHTML = "🎉 只今、結果発表ページを公開中！";
-        return;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-    timerElement.innerHTML = `<span>${days}</span>日 <span>${hours}</span>時間 <span>${minutes}</span>分 <span>${seconds}</span>秒`;
-}
-
-setInterval(updateCountdown, 1000);
 
 window.onload = function() {
-    const newBtn = document.getElementById('btn-new');
-    sortSenryu('new', newBtn);
-    updateCountdown();
+    const randomBtn = document.getElementById('btn-random');
+    sortSenryu('random', randomBtn);
 };
 </script>
 
